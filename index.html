@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LactisValle - Control de Ordeño & Sanidad Bovino</title>
+    <style>
+        /* Modern CSS Variables & Reset */
+        :root {
+            --primary-color: #1e293b;
+            --primary-light: #334155;
+            --accent-color: #2563eb;
+            --success-color: #16a34a;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius: 10px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding-bottom: 40px;
+        }
+
+        /* Navbar Header */
+        .navbar {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-online { background-color: #dcfce7; color: #15803d; }
+        .badge-offline { background-color: #fee2e2; color: #b91c1c; }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-online { background-color: var(--success-color); }
+        .dot-offline { background-color: var(--danger-color); }
+
+        /* Container & Layout */
+        .main-container {
+            max-width: 900px;
+            margin: 24px auto;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .kpi-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .kpi-card.warning { border-left-color: var(--warning-color); }
+        .kpi-card.danger { border-left-color: var(--danger-color); }
+
+        .kpi-title {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .kpi-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Form & Cards Component */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .info-box {
+            background-color: #f8fafc;
+            border: 1px dashed var(--border-color);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Buttons & Actions */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s, transform 0.1s;
+            width: 100%;
+        }
+
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background-color: var(--accent-color); color: #ffffff; }
+        .btn-primary:hover { background-color: #1d4ed8; }
+        .btn-success { background-color: var(--success-color); color: #ffffff; }
+        .btn-success:hover { background-color: #15803d; }
+
+        /* Alert Notifications */
+        .alert-box {
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .alert-danger { background-color: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .alert-success { background-color: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+
+        /* Data Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.88rem;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:hover { background-color: #f8fafc; }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Bar de Navegación Superior -->
+    <header class="navbar">
+        <div class="navbar-brand">
+            <span>🐄</span> LactisValle PWA
+        </div>
+        <div class="status-badge badge-online" id="networkStatus">
+            <span class="status-dot dot-online" id="networkDot"></span>
+            <span id="networkText">Modo Offline Listo</span>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="main-container">
+
+        <!-- Panel KPI Resumen -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">Registros en Cola Local</div>
+                <div class="kpi-value" id="kpiQueueCount">Pendientes</div>
+            </div>
+            <div class="kpi-card warning">
+                <div class="kpi-title">Regla Activa (RN-02)</div>
+                <div class="kpi-value">ΔP ≥ 15%</div>
+            </div>
+            <div class="kpi-card danger">
+                <div class="kpi-title">Módulo Sanitario</div>
+                <div class="kpi-value">Alerta Mastitis</div>
+            </div>
+        </section>
+
+        <!-- Formulario Principal: Pesaje a Potrero -->
+        <section class="card">
+            <h1 class="card-title">Captura de Pesaje en Potrero</h1>
+            <p class="card-subtitle">Ingreso de volumen y evaluación automática de desviaciones críticas</p>
+
+            <form id="ordenoForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="bovinoSelect">Bovino Identificado:</label>
+                        <select id="bovinoSelect" required>
+                            <option value="CO-710240">CO-710240 — Lucero (12.5 L)</option>
+                            <option value="CO-00988A">CO-00988A — Mariposa (15.0 L)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="litrosInput">Litros Pesados (L):</label>
+                        <input type="number" id="litrosInput" step="0.1" min="0.1" placeholder="Ej: 9.5" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    💾 Guardar Pesaje Localmente
+                </button>
+            </form>
+
+            <div id="statusAlert" class="alert-box"></div>
+        </section>
+
+        <!-- Tabla FIFO: Cola de Sincronización Local -->
+        <section class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+                <div>
+                    <h2 class="card-title" style="margin:0;">Cola FIFO Local</h2>
+                    <p class="card-subtitle" style="margin:0;">Registros retenidos localmente esperando conexión</p>
+                </div>
+                <button id="syncBtn" class="btn btn-primary" style="width: auto;">
+                    🔄 Sincronizar con MySQL
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bovino</th>
+                            <th>Pesaje</th>
+                            <th>ΔP (%)</th>
+                            <th>Estado Regla</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCola">
+                        <!-- Las filas se renderizan dinámicamente desde app.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pie de Página -->
+    <footer>
+        LactisValle — Sistema de Control Lechero & Sanidad Bovino
+    </footer>
+
+    <!-- Vinculación del Script Principal -->
+    <script src="app.js"></script>
+</body>
+</html>
