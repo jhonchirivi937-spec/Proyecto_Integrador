@@ -1,4 +1,3 @@
-```markdown
 # LACTISVALLE
 
 ## Anexo A – Catálogo de necesidades e historias de usuario
@@ -14,7 +13,7 @@ Las historias de usuario permiten expresar los requerimientos desde la perspecti
 ## 2. Catálogo de necesidades
 
 | ID | Necesidad | Descripción |
-|---|---|---|
+| --- | --- | --- |
 | N01 | Registro de usuarios | Permitir registrar y gestionar los usuarios que tendrán acceso al sistema. |
 | N02 | Registro de fincas | Contar con información organizada de las fincas vinculadas al proceso productivo. |
 | N03 | Registro de bovinos | Registrar y consultar la información básica de los bovinos pertenecientes a cada finca. |
@@ -29,7 +28,7 @@ Las historias de usuario permiten expresar los requerimientos desde la perspecti
 ## 3. Historias de usuario
 
 | ID | Historia de usuario | Criterio de aceptación |
-|---|---|---|
+| --- | --- | --- |
 | HU01 | Como usuario, quiero registrarme en el sistema para poder acceder a las funciones de LactisValle. | El sistema debe permitir registrar los datos necesarios del usuario y validar la información. |
 | HU02 | Como usuario, quiero registrar una finca para poder organizar la información de la unidad productiva. | El sistema debe permitir crear y consultar los datos correspondientes a una finca. |
 | HU03 | Como usuario, quiero registrar un bovino para poder identificar y llevar control de cada animal. | El sistema debe permitir guardar la información básica de cada bovino. |
@@ -44,4 +43,3 @@ Las historias de usuario permiten expresar los requerimientos desde la perspecti
 ## 4. Observación
 
 Las necesidades e historias de usuario presentadas permiten establecer una base para el desarrollo de LactisValle, teniendo en cuenta las condiciones de conectividad y las actividades relacionadas con el registro y seguimiento de los bovinos.
-```
