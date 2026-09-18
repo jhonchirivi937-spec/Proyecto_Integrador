@@ -1,61 +1,82 @@
-# Anexo C — Gestión del Proyecto y Tablero Scrum
+# ANEXO C: MARCO METODOLÓGICO Y SEGUIMIENTO SCRUM
 
-Este anexo detalla la planificación, ejecuciones iterativas y seguimiento del desarrollo del software **LactisValle**, estructurado bajo el marco ágil **Scrum** a lo largo de un ciclo de desarrollo dividido en tres *Sprints* de tres semanas cada uno.
-
----
-
-## 1. Estructura de Roles y Artefactos Scrum
-
-* **Product Owner:** Responsable de definir los Requisitos Funcionales y priorizar el *Product Backlog* según las necesidades del sector ganadero en Ubaté.
-* **Scrum Master:** Facilitador del proceso, encargado de asegurar la adherencia a las ceremonias y remover bloqueos técnicos o logísticos.
-* **Development Team:** Responsables del diseño de arquitectura *Offline-First*, desarrollo PWA, integración de `IndexedDB`, API Backend y motor de pruebas.
+**Proyecto:** LactisValle
+**Documento:** Anexo C - Planificación e Historial de Sprints
 
 ---
 
-## 2. Desglose de Historias de Usuario (Product Backlog)
+## 1. Planificación General de Sprints y Cobertura del Backlog
 
-| ID | Historia de Usuario | Requisito Asoc. | Puntos de Historia (Fibonacci) | Prioridad |
-|---|---|---|---|---|
-| **HU-01** | Como operario de campo, quiero registrar pesajes de ordeño sin conexión a internet para no perder datos en zonas rurales. | RF-01, RNF-03 | 8 | Alta |
-| **HU-02** | Como ganadero, quiero recibir una alerta visual cuando la producción de un bovino caiga más del 15% para detectar posibles problemas de salud. | RF-02 | 5 | Media |
-| **HU-03** | Como operario, quiero que los registros guardados sin conexión se envíen automáticamente al servidor cuando vuelva la señal. | RF-03, RNF-02 | 8 | Alta |
-| **HU-04** | Como operario, quiero buscar rápidamente un bovino por su número de chapeta o alias para agilizar la captura de datos. | RF-04 | 3 | Alta |
-| **HU-05** | Como ganadero, quiero visualizar la gráfica de producción de los últimos 14 pesajes de cada vaca directamente en mi celular. | RF-05 | 5 | Media |
-| **HU-06** | Como usuario, quiero mantener mi sesión iniciada sin necesidad de autenticarme cada día si no tengo señal de red. | RF-06 | 3 | Alta |
-| **HU-07** | Como usuario, quiero acceder a la aplicación mediante una PWA instalable en mi teléfono sin descargar archivos APK o IPA. | RNF-01, RNF-04 | 5 | Alta |
+El desarrollo del sistema **LactisValle** se organiza en ciclos iterativos e incrementales (Sprints) diseñados para cubrir la totalidad de las Historias de Usuario (HU) definidas en el *Product Backlog*.
+
+> **Estado Actual del Proyecto:**
+> Actualmente el proyecto se encuentra en la **Fase Inicial / Sprint 1 (En Progreso)**, enfocado en las capacidades clave de captura offline y la infraestructura base para el módulo de control de ordeño. Los Sprints posteriores están proyectados según el plan de entregas.
 
 ---
 
-## 3. Planificación y Ejecución de Sprints
+## 2. Mapa de Cobertura de Historias de Usuario (Product Backlog vs. Sprints)
 
-### Sprint 1: Fundamentos de Arquitectura y Maquetación Base
-* **Objetivo:** Definir la arquitectura de base de datos relacional, configurar el repositorio del proyecto y construir la interfaz PWA responsive.
-* **Entregables:** Documento de arquitectura, esquema relacional en 3FN (`schema.sql`), interfaz accesible (WCAG 2.1 AA) y repositorio base.
-* **Sprint Backlog Atendido:** HU-06, HU-07.
-* **Puntos de Historia:** 8 / 8.
-
-### Sprint 2: Motor Offline-First y Algoritmo de Alerta
-* **Objetivo:** Implementar la persistencia local transaccional mediante `IndexedDB`, el motor de búsqueda local y el cálculo de promedio móvil.
-* **Entregables:** Módulo de captura offline, consulta por chapeta con latencia $<50\text{ ms}$ y algoritmo de alerta preventiva ($>15\%$).
-* **Sprint Backlog Atendido:** HU-01, HU-02, HU-04.
-* **Puntos de Historia:** 16 / 16.
-
-### Sprint 3: Backend REST, Sincronización Diferida y Pruebas Unitarias
-* **Objetivo:** Desarrollar la API REST en Node.js, configurar los *Service Workers* para encolamiento FIFO y validar la cobertura de pruebas con Jest.
-* **Entregables:** API Backend con JWT, *Service Worker* con Background Sync y reporte de pruebas con Jest ($>80\%$ cobertura).
-* **Sprint Backlog Atendido:** HU-03, HU-05.
-* **Puntos de Historia:** 13 / 13.
+| Sprint | Objetivo / Épica Principal | Historias de Usuario Asignadas | Estado Actual |
+| :--- | :--- | :--- | :--- |
+| **Sprint 1** | Captura Offline y Control de Ordeño Base | HU-01 (Registro de Ordeño), HU-02 (Captura Offline en Campo), HU-03 (Detección de Caída de Producción) | **En Progreso** |
+| **Sprint 2** | Sincronización Backend y Gestión de Alertas | HU-04 (Cola FIFO de Sincronización), HU-05 (Procesamiento de Registros y Alertas Sanitarias en BD) | **Planificado** |
+| **Sprint 3** | Gestión de Hato y Perfiles Bovinos | HU-06 (CRUD de Bovinos), HU-07 (Ficha de Salud y Producción Individual) | **Planificado** |
+| **Sprint 4** | Reportes, Analítica y Panel de Control | HU-08 (Dashboard de Indicadores), HU-09 (Exportación de Reportes de Producción) | **Planificado** |
 
 ---
 
-## 4. Matriz de Seguimiento del Proyecto (Tablero KanBan Final)
+## 3. Detalle de Ejecución de Sprints
 
-| Historia de Usuario | Sprint | Estado Final | Criterio de Aceptación Cumplido |
-|---|---|---|---|
-| **HU-01** | Sprint 2 | **Completado** | Inserción local en `IndexedDB` en modo avión en $<100\text{ ms}$. |
-| **HU-02** | Sprint 2 | **Completado** | Muestra de bandera visual de alerta en pantalla ante delta $>15\%$. |
-| **HU-03** | Sprint 3 | **Completado** | Procesamiento en lote HTTP POST 201 y vaciado de cola `IndexedDB`. |
-| **HU-04** | Sprint 2 | **Completado** | Búsqueda por chapeta realizada en $<50\text{ ms}$ en cliente. |
-| **HU-05** | Sprint 3 | **Completado** | Gráfica histórica renderizada consumiendo datos locales. |
-| **HU-06** | Sprint 1 | **Completado** | Token JWT persistente en `localStorage` con vigencia de 30 días. |
-| **HU-07** | Sprint 1 | **Completado** | Instalación exitosa vía *Add to Home Screen* en iOS y Android. |
+### Sprint 1: Captura Offline y Control de Ordeño Base
+* **Estado:** En Progreso
+* **Objetivo:** Permitir el registro de ordeño en potrero sin conexión a red y calcular automáticamente alertas tempranas de desviación en la producción.
+* **Historias de Usuario:**
+  * **HU-01:** Como ordeñador, quiero registrar la cantidad de litros obtenidos por vaca para llevar el control diario.
+  * **HU-02:** Como usuario de campo, quiero registrar datos sin conexión a Internet para no perder información en potreros distantes.
+  * **HU-03:** Como sistema, quiero evaluar caídas de producción ($\ge 15\%$) en tiempo real para generar alertas de posible mastitis.
+* **Entregables:**
+  * Interfaz de usuario ligera (HTML/CSS/JS) optimizada para dispositivos móviles.
+  * Módulo JS `ColaSincronizacionOffline` con almacenamiento en `LocalStorage`.
+  * Regla de negocio `evaluarDesviacionLeche()` implementada en el cliente.
+
+---
+
+### Sprint 2: Sincronización Backend y Gestión de Alertas
+* **Estado:** Planificado (Próximo)
+* **Objetivo:** Implementar la API REST en Flask para recibir, procesar y almacenar de forma segura la información offline cuando se recupere la conectividad.
+* **Historias de Usuario:**
+  * **HU-04:** Como sistema local, quiero vaciar la cola FIFO hacia el servidor cuando `navigator.onLine` sea verdadero.
+  * **HU-05:** Como administrador, quiero que las alertas de salud se guarden automáticamente en la tabla `alerta_sanitaria` con consistencia transaccional (ACID).
+* **Entregables Proyectados:**
+  * Endpoint REST `/api/v1/ordeno/sincronizar` en Flask.
+  * Transacciones MySQL con manejo de `commit` y `rollback`.
+  * Tabla `alerta_sanitaria` integrada en la base de datos MySQL.
+
+---
+
+### Sprint 3: Gestión de Hato y Perfiles Bovinos
+* **Estado:** Planificado
+* **Objetivo:** Habilitar el módulo completo para la administración del inventario bovino y el seguimiento de la ficha técnica de cada animal.
+* **Historias de Usuario:**
+  * **HU-06:** Como veterinario/administrador, quiero registrar y actualizar la información de cada bovino (código, raza, edad, estado).
+  * **HU-07:** Como usuario, quiero consultar la historia clínica y el historial de producción de un bovino específico.
+
+---
+
+### Sprint 4: Reportes, Analítica y Panel de Control
+* **Estado:** Planificado
+* **Objetivo:** Proveer un panel analítico (Dashboard) para consolidar las métricas clave de producción y salud de la finca.
+* **Historias de Usuario:**
+  * **HU-08:** Como administrador, quiero ver gráficos de producción diaria y alertas de salud pendientes.
+  * **HU-09:** Como administrador, quiero exportar reportes de producción por período para la toma de decisiones.
+
+---
+
+## 4. Métricas de Seguimiento (Proyección)
+
+* **Velocidad Estimada:** 15-20 Puntos de Historia por Sprint.
+* **Criterios de Aceptación General (Definition of Done):**
+  1. Código probado y funcional en entorno local y offline.
+  2. Integración continua sin errores en la base de datos MySQL.
+  3. Cumplimiento del formato de codificación y documentación técnica actualizada.
+  
