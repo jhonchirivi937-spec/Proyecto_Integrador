@@ -1,47 +1,278 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LactisValle - Anexo B</title>
-<style>
-body{font-family:Arial,sans-serif;margin:40px;line-height:1.5;color:#222}
-h1{font-size:24px} h2{font-size:19px;margin-top:28px}
-.box{border:1px solid #999;padding:15px;margin:18px 0}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anexo B - LactisValle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f7f8;
+            color: #333;
+        }
+
+        header {
+            background: #2e7d32;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #2e7d32;
+            border-bottom: 2px solid #2e7d32;
+            padding-bottom: 8px;
+        }
+
+        .adr {
+            margin: 25px 0;
+            padding: 20px;
+            border-left: 5px solid #2e7d32;
+            background: #f8faf8;
+        }
+
+        .adr h3 {
+            color: #1b5e20;
+        }
+
+        .campo {
+            margin: 10px 0;
+        }
+
+        .campo strong {
+            color: #1b5e20;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #e8f5e9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
 </head>
+
 <body>
-<h1>ANEXO B. REGISTRO DE DECISIONES DE ARQUITECTURA (ADR SIMPLIFICADO)</h1>
-<p>Este registro presenta las principales decisiones técnicas consideradas para orientar el desarrollo de LactisValle, teniendo en cuenta las condiciones del entorno rural y la conectividad intermitente.</p>
 
-<div class="box"><h2>ADR-01 — Uso de arquitectura Offline First</h2>
-<p><strong>Contexto:</strong> La conexión a Internet puede ser inestable o inexistente durante el ordeño.</p>
-<p><strong>Alternativas:</strong> conexión permanente; almacenamiento local con sincronización posterior; equipos especializados.</p>
-<p><strong>Decisión:</strong> utilizar una arquitectura Offline First.</p>
-<p><strong>Razón:</strong> permite continuar con el registro durante los periodos sin conectividad y sincronizar posteriormente la información.</p></div>
+<header>
+    <h1>LactisValle</h1>
+    <p>Anexo B – Registro de decisiones de arquitectura</p>
+</header>
 
-<div class="box"><h2>ADR-02 — Uso de una PWA</h2>
-<p><strong>Contexto:</strong> LactisValle debe utilizarse desde dispositivos móviles durante las actividades de ordeño.</p>
-<p><strong>Alternativas:</strong> aplicación móvil nativa; aplicación web tradicional; Progressive Web App.</p>
-<p><strong>Decisión:</strong> utilizar una Progressive Web App (PWA).</p>
-<p><strong>Razón:</strong> facilita el uso desde dispositivos móviles y permite orientar la aplicación al funcionamiento sin conexión.</p></div>
+<main>
 
-<div class="box"><h2>ADR-03 — Uso de IndexedDB para almacenamiento local</h2>
-<p><strong>Contexto:</strong> los pesajes deben conservarse en el dispositivo cuando no exista conexión.</p>
-<p><strong>Alternativas:</strong> no almacenar hasta recuperar Internet; almacenamiento local básico; IndexedDB.</p>
-<p><strong>Decisión:</strong> utilizar IndexedDB para almacenar localmente la información necesaria.</p>
-<p><strong>Razón:</strong> permite mantener información estructurada en el dispositivo y manejar registros pendientes de sincronización.</p></div>
+    <h2>1. Introducción</h2>
 
-<div class="box"><h2>ADR-04 — Uso de una cola FIFO</h2>
-<p><strong>Contexto:</strong> pueden existir varios pesajes pendientes cuando se recupere la conexión.</p>
-<p><strong>Alternativas:</strong> envío sin orden; enviar solo el último registro; cola FIFO.</p>
-<p><strong>Decisión:</strong> utilizar una cola FIFO (First-In, First-Out).</p>
-<p><strong>Razón:</strong> permite procesar los registros siguiendo el orden en que fueron capturados.</p></div>
+    <p>
+        Este anexo contiene el registro de las principales decisiones de
+        arquitectura consideradas para el desarrollo del sistema LactisValle.
+        Los ADR permiten documentar qué decisión se tomó, por qué se tomó
+        y cuáles son sus implicaciones para el proyecto.
+    </p>
 
-<div class="box"><h2>ADR-05 — Modelo de datos basado en entidades relacionadas</h2>
-<p><strong>Contexto:</strong> el sistema debe relacionar fincas, usuarios, bovinos y registros de pesaje.</p>
-<p><strong>Alternativas:</strong> una estructura única; entidades separadas y relacionadas.</p>
-<p><strong>Decisión:</strong> utilizar las entidades Finca, Usuario, Bovino y Registro de Pesaje.</p>
-<p><strong>Razón:</strong> esta estructura permite organizar la información y establecer las relaciones necesarias para el control de la producción.</p></div>
+    <div class="adr">
+        <h3>ADR-001 – Enfoque Offline First</h3>
+
+        <div class="campo">
+            <strong>Estado:</strong> Aceptada
+        </div>
+
+        <div class="campo">
+            <strong>Decisión:</strong>
+            Diseñar el sistema bajo un enfoque Offline First.
+        </div>
+
+        <div class="campo">
+            <strong>Contexto:</strong>
+            El sistema puede ser utilizado en zonas rurales donde la
+            conectividad a Internet puede ser limitada o intermitente.
+        </div>
+
+        <div class="campo">
+            <strong>Justificación:</strong>
+            Permitir que los usuarios continúen registrando información
+            aunque temporalmente no exista conexión.
+        </div>
+
+        <div class="campo">
+            <strong>Consecuencia:</strong>
+            Se requiere almacenamiento local y posteriormente un mecanismo
+            de sincronización con la información central.
+        </div>
+    </div>
+
+    <div class="adr">
+        <h3>ADR-002 – Uso de PWA</h3>
+
+        <div class="campo">
+            <strong>Estado:</strong> Aceptada
+        </div>
+
+        <div class="campo">
+            <strong>Decisión:</strong>
+            Implementar la solución como una Progressive Web App (PWA).
+        </div>
+
+        <div class="campo">
+            <strong>Contexto:</strong>
+            Se busca facilitar el acceso al sistema desde diferentes
+            dispositivos sin depender de una instalación tradicional.
+        </div>
+
+        <div class="campo">
+            <strong>Justificación:</strong>
+            Una PWA permite ofrecer una experiencia similar a una aplicación,
+            aprovechando tecnologías web y facilitando el acceso desde
+            dispositivos móviles y computadores.
+        </div>
+
+        <div class="campo">
+            <strong>Consecuencia:</strong>
+            El sistema debe considerar características como instalación,
+            funcionamiento offline y almacenamiento local.
+        </div>
+    </div>
+
+    <div class="adr">
+        <h3>ADR-003 – Uso de IndexedDB</h3>
+
+        <div class="campo">
+            <strong>Estado:</strong> Aceptada
+        </div>
+
+        <div class="campo">
+            <strong>Decisión:</strong>
+            Utilizar IndexedDB para almacenar información localmente
+            en el navegador.
+        </div>
+
+        <div class="campo">
+            <strong>Contexto:</strong>
+            El sistema necesita conservar registros cuando el usuario
+            no tenga conexión a Internet.
+        </div>
+
+        <div class="campo">
+            <strong>Justificación:</strong>
+            IndexedDB permite almacenar datos estructurados en el
+            dispositivo y facilita el funcionamiento offline.
+        </div>
+
+        <div class="campo">
+            <strong>Consecuencia:</strong>
+            Se debe implementar posteriormente la lógica necesaria
+            para sincronizar los datos locales con el servidor.
+        </div>
+    </div>
+
+    <div class="adr">
+        <h3>ADR-004 – Estrategia FIFO para sincronización</h3>
+
+        <div class="campo">
+            <strong>Estado:</strong> Aceptada
+        </div>
+
+        <div class="campo">
+            <strong>Decisión:</strong>
+            Utilizar una estrategia FIFO (First In, First Out)
+            para gestionar los registros pendientes de sincronización.
+        </div>
+
+        <div class="campo">
+            <strong>Contexto:</strong>
+            Cuando no existe conexión, pueden acumularse diferentes
+            registros realizados por el usuario.
+        </div>
+
+        <div class="campo">
+            <strong>Justificación:</strong>
+            Procesar los registros en el orden en que fueron creados
+            facilita la organización y seguimiento de la información.
+        </div>
+
+        <div class="campo">
+            <strong>Consecuencia:</strong>
+            Los registros pendientes deben mantenerse organizados
+            hasta que puedan ser enviados correctamente.
+        </div>
+    </div>
+
+    <h2>2. Entidades principales del sistema</h2>
+
+    <table>
+        <tr>
+            <th>Entidad</th>
+            <th>Descripción</th>
+        </tr>
+
+        <tr>
+            <td>Finca</td>
+            <td>
+                Representa la unidad productiva donde se encuentran
+                los bovinos y se realizan las actividades registradas
+                en el sistema.
+            </td>
+        </tr>
+
+        <tr>
+            <td>Usuario</td>
+            <td>
+                Representa a la persona que utiliza el sistema para
+                gestionar y consultar la información.
+            </td>
+        </tr>
+
+        <tr>
+            <td>Bovino</td>
+            <td>
+                Representa cada animal registrado dentro de una finca
+                para realizar su seguimiento.
+            </td>
+        </tr>
+
+        <tr>
+            <td>Registro de Pesaje</td>
+            <td>
+                Contiene la información relacionada con el peso de un
+                bovino, incluyendo los datos necesarios para realizar
+                seguimiento de su evolución.
+            </td>
+        </tr>
+    </table>
+
+</main>
+
+<footer>
+    LactisValle – Anexo B
+</footer>
+
 </body>
 </html>
+```
