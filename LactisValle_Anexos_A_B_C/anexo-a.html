@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LactisValle - Anexo A</title>
+<style>
+body{font-family:Arial,sans-serif;margin:40px;line-height:1.5;color:#222}
+h1{font-size:24px} h2{font-size:19px;margin-top:28px}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{border:1px solid #999;padding:9px;vertical-align:top}
+th{font-weight:bold} .note{margin-top:20px}
+</style>
+</head>
+<body>
+<h1>ANEXO A. CATÁLOGO DE NECESIDADES E HISTORIAS DE USUARIO</h1>
+<p>Este catálogo reúne las principales necesidades identificadas para el desarrollo de LactisValle, teniendo en cuenta el trabajo del operario de campo, el registro de producción y las funcionalidades previstas para las siguientes etapas.</p>
+
+<table>
+<tr><th>ID</th><th>Historia de usuario</th><th>Criterio de aceptación</th></tr>
+<tr><td>HU01</td><td>Como operario de campo, quiero identificar un bovino mediante su número de chapa para encontrar rápidamente su información.</td><td>El sistema permite ingresar el número de chapa y muestra el bovino correspondiente.</td></tr>
+<tr><td>HU02</td><td>Como operario, quiero registrar los litros de leche obtenidos durante el ordeño para guardar la producción de cada bovino.</td><td>El sistema permite ingresar los litros y seleccionar la jornada de mañana o tarde.</td></tr>
+<tr><td>HU03</td><td>Como operario, quiero guardar un pesaje sin conexión a Internet para poder trabajar en zonas rurales con poca cobertura.</td><td>El registro se guarda correctamente en el almacenamiento local aunque no exista conexión.</td></tr>
+<tr><td>HU04</td><td>Como operario, quiero que el sistema identifique la fecha y hora del registro para mantener la trazabilidad.</td><td>Al guardar un pesaje se registra automáticamente la fecha y hora.</td></tr>
+<tr><td>HU05</td><td>Como operario, quiero que los registros realizados sin Internet queden pendientes de sincronización.</td><td>El registro queda identificado con estado de sincronización pendiente.</td></tr>
+<tr><td>HU06</td><td>Como usuario, quiero que los datos pendientes se envíen al servidor cuando vuelva la conexión.</td><td>Al recuperar la conexión, el sistema intenta enviar los registros pendientes al servidor.</td></tr>
+<tr><td>HU07</td><td>Como administrador, quiero consultar la información de los bovinos y sus registros de producción para realizar seguimiento al hato.</td><td>El sistema permite consultar los datos almacenados de cada bovino y sus pesajes.</td></tr>
+<tr><td>HU08</td><td>Como ganadero, quiero recibir una alerta cuando se presente una disminución significativa en la producción de un bovino.</td><td>El sistema compara la producción registrada con el valor de referencia y genera una alerta cuando se cumple el criterio establecido.</td></tr>
+</table>
+
+<h2>Necesidades principales</h2>
+<ol>
+<li>Digitalizar el registro de producción de leche.</li>
+<li>Reducir la dependencia de planillas físicas.</li>
+<li>Permitir el registro sin conexión a Internet.</li>
+<li>Mantener los datos almacenados localmente hasta recuperar la conexión.</li>
+<li>Sincronizar posteriormente la información con un servidor central.</li>
+<li>Identificar cada bovino mediante su número de chapa.</li>
+<li>Mantener la fecha, hora y usuario responsable de cada registro.</li>
+<li>Facilitar el seguimiento de la producción y generar alertas ante disminuciones.</li>
+</ol>
+
+<p class="note"><strong>Nota:</strong> HU01 a HU05 corresponden principalmente al alcance de la arquitectura y captura offline trabajada en el Sprint 1. Las funcionalidades relacionadas con servidor, sincronización completa, gestión del hato y alertas corresponden a etapas posteriores.</p>
+</body>
+</html>
