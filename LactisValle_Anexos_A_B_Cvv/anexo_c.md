@@ -61,3 +61,4 @@ El presupuesto de LactisValle debe contemplar tanto los recursos tecnológicos c
 
 La organización de estos elementos permite tener una visión más clara de los requerimientos del proyecto y facilita una futura estimación económica.
 ```
+
