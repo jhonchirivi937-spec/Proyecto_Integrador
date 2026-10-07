@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LactisValle - Iniciar Sesión</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-body">
+    <div class="auth-container">
+        <h1>🐄 LactisValle</h1>
+        <p>Sistema de Control Lechero - Valle de Ubaté</p>
+        
+        <div class="form-box">
+            <h2>Acceso al Sistema</h2>
+            <input type="text" id="loginUser" placeholder="Usuario o cédula">
+            <input type="password" id="loginPass" placeholder="Contraseña">
+            <button onclick="validarLogin()">Ingresar</button>
+        </div>
+    </div>
+
+    <script>
+        function validarLogin() {
+            let user = document.getElementById("loginUser").value.trim();
+            let pass = document.getElementById("loginPass").value.trim();
+
+            // Validación básica (puedes adaptarla a tu lógica de base de datos o LocalStorage)
+            if (user !== "" && pass !== "") {
+                // Opcional: Guardar sesión activa
+                localStorage.setItem("usuarioActivo", user);
+                
+                // REDIRECCIÓN CLAVE: Envía al usuario al panel principal
+                window.location.href = "dashboard.html";
+            } else {
+                alert("Por favor, ingresa usuario y contraseña.");
+            }
+        }
+    </script>
+</body>
+</html>
