@@ -1,0 +1,127 @@
+:root {
+    --primary-color: #1e293b;
+    --accent-color: #2563eb;
+    --accent-hover: #1d4ed8;
+    --bg-body: #f1f5f9;
+    --bg-card: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --radius: 12px;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1e293b, #334155);
+}
+
+.titulo {
+    color: white;
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.container {
+    width: 380px;
+    background: var(--bg-card);
+    padding: 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent-color);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.btn-export {
+    margin-top: 20px;
+    background: #334155;
+    width: auto;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    color: white;
+    border: 1px solid #475569;
+    cursor: pointer;
+}
+
+.btn-export:hover {
+    background: #475569;
+}
+
+.link {
+    text-align: center;
+    margin-top: 15px;
+    color: var(--accent-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.form {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.oculto {
+    transform: translateX(400px);
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+}
