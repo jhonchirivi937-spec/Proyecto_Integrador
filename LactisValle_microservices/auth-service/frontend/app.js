@@ -1,5 +1,5 @@
 // URL base de tu microservicio de autenticación en Flask (por defecto corre en el puerto 5001)
-const AUTH_API_URL = "http://127.0.0.1:5001/api";
+const AUTH_API_URL = "http://127.0.0.1:5000/api";
 
 // Mostrar formulario de Registro
 function mostrarRegistro() {

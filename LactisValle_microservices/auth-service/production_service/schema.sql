@@ -60,6 +60,12 @@ CREATE TABLE IF NOT EXISTS alerta_sanitaria (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- =============================================================================
 -- ÍNDICES DE OPTIMIZACIÓN DE CONSULTAS ($O(\log n)$)
