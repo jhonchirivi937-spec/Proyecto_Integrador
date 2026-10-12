@@ -176,3 +176,89 @@ body {
 .oculto {
     display: none !important;
 }
+/* Estilos para el Perfil y Botón de Cierre de Sesión */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.user-avatar {
+  font-size: 1.1rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.btn-logout {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: #bd2130;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #1a2332;
+  color: #ffffff;
+}
+
+.logo-container h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.btn-logout {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: #bd2130;
+}
+
+.badge-offline {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}

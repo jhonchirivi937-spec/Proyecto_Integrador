@@ -85,3 +85,38 @@ function exportarUsuariosJSON() {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
 }
+// 1. Guarda la sesión y actualiza la barra del perfil
+function guardarSesionUsuario(nombreUsuario) {
+  localStorage.setItem('usuario_activo', nombreUsuario);
+  actualizarInterfazPerfil();
+}
+
+// 2. Muestra u oculta la sección del perfil según si hay un usuario logueado
+function actualizarInterfazPerfil() {
+  const usuarioActivo = localStorage.getItem('usuario_activo');
+  const userSection = document.getElementById('user-profile-section');
+  const userNameSpan = document.getElementById('user-display-name');
+
+  if (userSection && userNameSpan) {
+    if (usuarioActivo) {
+      userNameSpan.textContent = usuarioActivo;
+      userSection.style.display = 'flex';
+    } else {
+      userSection.style.display = 'none';
+    }
+  }
+}
+
+// 3. Función para Cerrar Sesión de forma segura
+function cerrarSesion() {
+  if (confirm("¿Estás seguro de que deseas cerrar la sesión?")) {
+    localStorage.removeItem('usuario_activo');
+    alert("Sesión cerrada correctamente.");
+    window.location.reload(); // Recarga la página o te devuelve al login
+  }
+}
+
+// 4. Ejecutar la comprobación al cargar cualquier vista
+document.addEventListener('DOMContentLoaded', () => {
+  actualizarInterfazPerfil();
+});

@@ -7,12 +7,28 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <!-- Bar de Navegación Superior -->
+    <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
     <header class="navbar">
         <div class="navbar-brand">
             <span>🐄</span> LactisValle PWA
         </div>
+
+        <!-- PERFIL ESTILO IMAGEN 3 -->
+        <div id="user-profile-container" class="user-profile-container" style="display: none;">
+            <button class="user-profile-badge" onclick="toggleUserMenu(event)">
+                <span class="user-avatar-icon">👤</span>
+                <span id="user-display-name">Usuario</span>
+            </button>
+            
+            <!-- Menú Desplegable con Cerrar Sesión -->
+            <div id="user-dropdown-menu" class="user-dropdown-custom">
+                <button class="dropdown-logout-btn" onclick="cerrarSesion()">
+                    🚪 Cerrar Sesión
+                </button>
+            </div>
+        </div>
+
+        <!-- INDICADOR DE ESTADO OFFLINE -->
         <div class="status-badge badge-online" id="networkStatus">
             <span class="status-dot dot-online" id="networkDot"></span>
             <span id="networkText">Modo Offline Listo</span>
