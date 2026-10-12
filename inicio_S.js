@@ -1,72 +1,81 @@
-// Función para cambiar de vista (Mostrar formulario de Registro)
+// Mostrar formulario de Registro
 function mostrarRegistro() {
-    document.getElementById("login").classList.add("oculto");
-    document.getElementById("register").classList.remove("oculto");
+    document.getElementById("loginForm").classList.add("oculto");
+    document.getElementById("registerForm").classList.remove("oculto");
 }
 
-// Función para cambiar de vista (Mostrar formulario de Login)
+// Mostrar formulario de Login
 function mostrarLogin() {
-    document.getElementById("register").classList.add("oculto");
-    document.getElementById("login").classList.remove("oculto");
+    document.getElementById("registerForm").classList.add("oculto");
+    document.getElementById("loginForm").classList.remove("oculto");
 }
 
-// Función para registrar un nuevo usuario
+// Registrar nuevo usuario en localStorage
 function registrar() {
     let u = document.getElementById("regUser").value.trim();
     let p = document.getElementById("regPass").value.trim();
 
     if (u === "" || p === "") {
-        alert("Por favor, completa todos los campos.");
+        alert("Por favor completa todos los campos.");
         return;
     }
 
+    // Comprobar si el usuario ya existe
     if (localStorage.getItem(u)) {
-        alert("El usuario ya existe en el sistema.");
+        alert("El usuario ya se encuentra registrado.");
         return;
     }
 
-    // Guardar credenciales en LocalStorage
+    // Guardar usuario y contraseña en localStorage
     localStorage.setItem(u, p);
-    alert("¡Usuario registrado exitosamente!");
+    alert("¡Usuario registrado con éxito! Ahora puedes iniciar sesión.");
 
-    // Limpiar campos y volver al login
+    // Limpiar campos del formulario
     document.getElementById("regUser").value = "";
     document.getElementById("regPass").value = "";
+
+    // Volver a la vista de login
     mostrarLogin();
 }
 
-// Función para validar el inicio de sesión y redirigir al panel
+// Validar inicio de sesión estricto
 function validarLogin() {
     let u = document.getElementById("loginUser").value.trim();
     let p = document.getElementById("loginPass").value.trim();
 
-    // Validar si el usuario existe y la contraseña coincide
-    if (localStorage.getItem(u) === p) {
+    if (u === "" || p === "") {
+        alert("Por favor ingresa usuario y contraseña.");
+        return;
+    }
+
+    // Buscar en localStorage
+    let claveGuardada = localStorage.getItem(u);
+
+    // Verificación estricta de credenciales
+    if (claveGuardada !== null && claveGuardada === p) {
         localStorage.setItem("usuarioActivo", u);
-        alert("¡Bienvenido al sistema, " + u + "!");
+        alert("¡Bienvenido, " + u + "!");
         
-        // Redirección al panel principal de LactisValle
-        window.location.href = "dashboard.html";
+        // Redirección al panel principal de la app
+        window.location.href = "Dashboard.html";
     } else {
-        alert("Usuario o contraseña incorrectos.");
+        alert("Usuario o contraseña incorrectos. Si no tienes cuenta, haz clic en 'Registrar Usuario'.");
     }
 }
 
-// Función para exportar los usuarios guardados a un archivo JSON
+// Exportar base de datos local de usuarios en JSON
 function exportarUsuariosJSON() {
     let usuarios = {};
     
-    // Recorremos el localStorage
     for (let i = 0; i < localStorage.length; i++) {
         let clave = localStorage.key(i);
-        // Evitamos exportar la sesión activa si está guardada ahí
+        // Excluir la variable de sesión activa de la exportación
         if (clave !== "usuarioActivo") {
             let valor = localStorage.getItem(clave);
             usuarios[clave] = valor;
         }
     }
 
-    // Convertir el objeto a formato de descarga JSON
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(usuarios, null, 2));
     
     const downloadAnchorNode = document.createElement('a');

@@ -3,50 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LactisValle - Iniciar Sesión</title>
+    <title>LactisValle — Acceso al Sistema</title>
+    <!-- Hoja de estilos del inicio de sesión -->
     <link rel="stylesheet" href="inicio_S.css">
 </head>
-<body class="login-body">
-    <div class="auth-container">
-        <h1>🐄 LactisValle</h1>
-        <p>Sistema de Control Lechero - Valle de Ubaté</p>
-        
-        <div class="form-box">
+<body>
+
+    <div class="login-container">
+        <div class="logo-section">
+            <span class="emoji-logo">🐄</span>
+            <h1>LactisValle</h1>
+            <p>Sistema de Control Lechero - Valle de Ubaté</p>
+        </div>
+
+        <!-- FORMULARIO DE INICIO DE SESIÓN -->
+        <form id="loginForm" class="auth-form" onsubmit="event.preventDefault(); validarLogin();">
             <h2>Acceso al Sistema</h2>
-            <input type="text" id="loginUser" placeholder="Usuario o cédula">
-            <input type="password" id="loginPass" placeholder="Contraseña">
-            <button onclick="validarLogin()">Ingresar</button>
+            
+            <div class="input-group">
+                <input type="text" id="loginUser" placeholder="Usuario o cédula" required>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="loginPass" placeholder="Contraseña" required>
+            </div>
+            
+            <button type="submit" class="btn-submit">Ingresar</button>
+            
+            <div class="divider">ó</div>
+
+            <!-- BOTÓN PARA MOSTRAR EL FORMULARIO DE REGISTRO -->
+            <button type="button" class="btn-secondary" onclick="mostrarRegistro()">
+                📝 Registrar Usuario
+            </button>
+        </form>
+
+        <!-- FORMULARIO DE REGISTRO DE USUARIO (Oculto al inicio) -->
+        <form id="registerForm" class="auth-form oculto" onsubmit="event.preventDefault(); registrar();">
+            <h2>Registro de Usuario</h2>
+            
+            <div class="input-group">
+                <input type="text" id="regUser" placeholder="Nuevo usuario o cédula" required>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="regPass" placeholder="Crear contraseña" required>
+            </div>
+            
+            <button type="submit" class="btn-submit">Guardar Registro</button>
+            
+            <p class="switch-text">
+                ¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin()">Inicia sesión aquí</a>
+            </p>
+        </form>
+
+        <!-- BOTÓN PARA EXPORTAR BASE DE DATOS LOCAL JSON -->
+        <div class="export-box">
+            <button type="button" onclick="exportarUsuariosJSON()" class="btn-export">
+                📥 Descargar Base de Datos (JSON)
+            </button>
         </div>
     </div>
-<form id="registerForm" class="auth-form oculto" onsubmit="event.preventDeFault(); registrar();">
-            <h2> Registro de Usuario </h2>
-            <div class="input-grup">
-                <input type="text" id="reUser" placeholder="Nuevo usuario o cèdula" required/>
-                </div>
-                <div class="input-grup">
-                    <input type = "password" id="regPass" placeholder="Crear contraseña" required/>
-                    </div>
-                    <button type="submit" class="btn-submit">Guardar Registro</button>
-                    <p class="switch-text">
-                        ¿Ya tienes cuenta? <a href="#" onclick="mostrarlogin()">Inicia sesión aqui</a>
-                    </p>
-            </form>
-    <script>
-        function validarLogin() {
-            let user = document.getElementById("loginUser").value.trim();
-            let pass = document.getElementById("loginPass").value.trim();
 
-            // Validación básica (puedes adaptarla a tu lógica de base de datos o LocalStorage)
-            if (user !== "" && pass !== "") {
-                // Opcional: Guardar sesión activa
-                localStorage.setItem("usuarioActivo", user);
-                
-                // REDIRECCIÓN CLAVE: Envía al usuario al panel principal
-                window.location.href = "dashboard.html";
-            } else {
-                alert("Por favor, ingresa usuario y contraseña.");
-            }
-        }
-    </script>
+    <!-- Script de lógica -->
+    <script src="app.js"></script>
 </body>
 </html>
