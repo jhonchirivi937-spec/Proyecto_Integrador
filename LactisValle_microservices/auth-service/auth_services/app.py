@@ -25,7 +25,12 @@ DB_CONFIG = {
 def obtener_conexion_db():
     """Crea y retorna una nueva conexión a la base de datos MySQL."""
     return mysql.connector.connect(**DB_CONFIG)
-
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({
+        "status": "success",
+        "mensaje": "Microservicio LactisValle en ejecución y conectado a MySQL"
+    })
 @app.route('/api/v1/ordeno/sincronizar', methods=['POST'])
 def sincronizar_registros_offline():
     """
