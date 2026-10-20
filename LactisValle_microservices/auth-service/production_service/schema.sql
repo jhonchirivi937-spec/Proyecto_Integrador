@@ -1,22 +1,14 @@
--- =============================================================================
--- SISTEMA DE CONTROL LECHERO OFFLINE-FIRST: LACTISVALLE
--- Script DDL: Creación de Esquema, Tablas, Restricciones y Datos de Prueba
--- Motor compatible: MySQL 8.0+ / MariaDB 10.4+
--- =============================================================================
-
 CREATE DATABASE IF NOT EXISTS lactisvalle_db
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
 USE lactisvalle_db;
-
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
-
 CREATE TABLE IF NOT EXISTS bovino (
     id_bovino VARCHAR(50) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
@@ -24,7 +16,6 @@ CREATE TABLE IF NOT EXISTS bovino (
     estado VARCHAR(15) NOT NULL DEFAULT 'ACTIVO',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
-
 CREATE TABLE IF NOT EXISTS registro_ordeno (
     id_ordeno INT AUTO_INCREMENT PRIMARY KEY,
     id_bovino VARCHAR(50) NOT NULL,
@@ -42,7 +33,6 @@ CREATE TABLE IF NOT EXISTS registro_ordeno (
 
     CONSTRAINT chk_ordeno_litros CHECK (litros_pesados >= 0.00 AND litros_pesados <= 99.99)
 ) ENGINE=InnoDB;
-
 CREATE TABLE IF NOT EXISTS alerta_sanitaria (
     id_alerta INT AUTO_INCREMENT PRIMARY KEY,
     id_ordeno INT NOT NULL,
