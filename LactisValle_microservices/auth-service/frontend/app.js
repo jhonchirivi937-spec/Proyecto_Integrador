@@ -82,7 +82,7 @@ async function validarLogin() {
             alert(data.message || `¡Bienvenido, ${u}!`);
             
             // Redirigir al panel principal
-            window.location.href = "dashboard.html";
+            window.location.href = "menu.html";
         } else {
             alert(data.message || "Credenciales incorrectas.");
         }
@@ -169,3 +169,101 @@ function exportarUsuariosJSON() {
 document.addEventListener('DOMContentLoaded', () => {
     cargarPerfilUsuario();
 });
+
+function guardarPesajeLocal() {
+    // Captura el texto escrito en el nuevo input
+    const bovinoInput = document.getElementById('bovinoInput');
+    const jornadaSelect = document.getElementById('jornadaSelect');
+    const litrosInput = document.getElementById('litrosInput');
+    const condicionCorporal = document.getElementById('condicionCorporal');
+    const estadoUbre = document.getElementById('estadoUbre');
+    const observacionesInput = document.getElementById('observacionesInput');
+
+    if (!bovinoInput.value.trim() || !litrosInput.value) {
+        alert("Por favor escribe el identificador del bovino y los litros pesados.");
+        return;
+    }
+
+    const bovino = bovinoInput.value.trim(); // Lee lo que escribes manualmente
+    const jornada = jornadaSelect.value;
+    const litros = parseFloat(litrosInput.value);
+    const cc = condicionCorporal.value || "3.0";
+    const sanidad = estadoUbre.value;
+    const obs = observacionesInput.value.trim() || "Sin novedad";
+
+    // Regla de desviación o alerta sanitaria
+    const deltaP = parseFloat((Math.random() * 25).toFixed(1)); 
+    const estadoRegla = (deltaP >= 15 || sanidad !== "Sana") ? "Alerta Sanitaria / ΔP" : "Normal";
+
+    const nuevoRegistro = {
+        id: Date.now(),
+        bovino,
+        jornada,
+        litros,
+        cc,
+        sanidad,
+        obs,
+        deltaP,
+        estadoRegla,
+        hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    // Guardar en la cola FIFO local
+    colaPesajes.push(nuevoRegistro);
+    localStorage.setItem('cola_pesajes', JSON.stringify(colaPesajes));
+
+    alert(`¡Pesaje de "${bovino}" registrado en la cola FIFO local!`);
+    document.getElementById('ordenoForm').reset();
+
+    actualizarKPIs();
+    renderizarTablaCola();
+}
+
+// Función auxiliar para registrar dinámicamente nuevos bovinos en la lista desplegable
+function agregarBovinoADataList(nuevoBovino) {
+    const datalist = document.getElementById('listaBovinos');
+    if (!datalist) return;
+
+    const opciones = Array.from(datalist.options).map(opt => opt.value);
+    if (!opciones.includes(nuevoBovino)) {
+        const nuevaOpcion = document.createElement('option');
+        nuevaOpcion.value = nuevoBovino;
+        datalist.appendChild(nuevaOpcion);
+    }
+}
+
+function renderizarTablaCola() {
+    const tbody = document.getElementById('tablaCola');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    if (colaPesajes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #666; padding: 15px;">No hay registros pendientes en la cola local.</td></tr>`;
+        return;
+    }
+
+    colaPesajes.forEach((item) => {
+        const tr = document.createElement('tr');
+        const esAlerta = item.estadoRegla.includes("Alerta");
+
+        tr.innerHTML = `
+            <td><strong>${item.bovino}</strong><br><small style="color: #666;">${item.jornada} (${item.hora})</small></td>
+            <td>${item.litros} L</td>
+            <td>${item.cc}</td>
+            <td>${item.sanidad}</td>
+            <td><small>${item.obs}</small></td>
+            <td>
+                <span style="padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; background-color: ${esAlerta ? '#ffebee' : '#e8f5e9'}; color: ${esAlerta ? '#c62828' : '#2e7d32'};">
+                    ${item.estadoRegla}
+                </span>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+function limpiarColaLocal() {
+    localStorage.removeItem('cola_pesajes');
+    alert("Cola local limpiada con éxito.");
+    location.reload();
+}

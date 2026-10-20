@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LactisValle - Control de Ordeño & Sanidad Bovino</title>
+    <title>LactisValle — Registro de Pesaje</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
     <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
     <header class="navbar">
         <div class="navbar-brand">
             <span>🐄</span> LactisValle PWA
         </div>
 
-        <!-- PERFIL ESTILO IMAGEN 3 -->
+        <!-- PERFIL DE USUARIO Y MENÚ DESPLEGABLE -->
         <div id="user-profile-container" class="user-profile-container" style="display: none;">
             <button class="user-profile-badge" onclick="toggleUserMenu(event)">
                 <span class="user-avatar-icon">👤</span>
                 <span id="user-display-name">Usuario</span>
             </button>
             
-            <!-- Menú Desplegable con Cerrar Sesión -->
             <div id="user-dropdown-menu" class="user-dropdown-custom">
                 <button class="dropdown-logout-btn" onclick="cerrarSesion()">
                     🚪 Cerrar Sesión
@@ -28,62 +28,100 @@
             </div>
         </div>
 
-        <!-- INDICADOR DE ESTADO OFFLINE -->
+        <!-- INDICADOR DE MODO OFFLINE/ONLINE -->
         <div class="status-badge badge-online" id="networkStatus">
             <span class="status-dot dot-online" id="networkDot"></span>
             <span id="networkText">Modo Offline Listo</span>
         </div>
     </header>
 
-    <!-- Contenedor Principal -->
+    <!-- CONTENEDOR PRINCIPAL -->
     <main class="main-container">
 
-        <!-- Panel KPI Resumen -->
+        <!-- RESUMEN DE INDICADORES (KPIs) -->
         <section class="kpi-grid">
             <div class="kpi-card">
-                <div class="kpi-title">Registros en Cola Local</div>
-                <div class="kpi-value" id="kpiQueueCount">Pendientes</div>
+                <div class="kpi-title">REGISTROS EN COLA LOCAL</div>
+                <div class="kpi-value" id="kpiQueueCount">0 Pendientes</div>
             </div>
-            <div class="kpi-card warning">
-                <div class="kpi-title">Regla Activa (RN-02)</div>
+            <div class="kpi-card">
+                <div class="kpi-title">REGLA ACTIVA (RN-02)</div>
                 <div class="kpi-value">ΔP ≥ 15%</div>
             </div>
-            <div class="kpi-card danger">
-                <div class="kpi-title">Módulo Sanitario</div>
-                <div class="kpi-value">Alerta Mastitis</div>
+            <div class="kpi-card">
+                <div class="kpi-title">MÓDULO SANITARIO</div>
+                <div class="kpi-value" style="color: #c62828;">Alerta Mastitis</div>
             </div>
         </section>
 
-        <!-- Formulario Principal: Pesaje a Potrero -->
+        <!-- FORMULARIO DE CAPTURA DE PESAJE EN POTRERO -->
         <section class="card">
             <h1 class="card-title">Captura de Pesaje en Potrero</h1>
-            <p class="card-subtitle">Ingreso de volumen y evaluación automática de desviaciones críticas</p>
+            <p class="card-subtitle">Ingreso detallado de volumen, condición del bovino y evaluación sanitaria</p>
 
             <form id="ordenoForm">
-                <div class="form-grid">
+                <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                    
+                    <!-- ENTRADA DE TEXTO LIBRE LIMPIA PARA EL BOVINO -->
                     <div class="form-group">
-                        <label for="bovinoSelect">Bovino Identificado:</label>
-                        <select id="bovinoSelect" required>
-                            <option value="CO-710240">CO-710240 — Lucero (12.5 L)</option>
-                            <option value="CO-00988A">CO-00988A — Mariposa (15.0 L)</option>
+                        <label for="bovinoInput">Bovino Identificado:</label>
+                        <input 
+                            type="text" 
+                            id="bovinoInput" 
+                            placeholder="Escribe el código o nombre del bovino..." 
+                            required 
+                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box;"
+                        >
+                    </div>
+
+                    <!-- JORNADA DE ORDEÑO -->
+                    <div class="form-group">
+                        <label for="jornadaSelect">Jornada de Ordeño:</label>
+                        <select id="jornadaSelect" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                            <option value="Mañana">🌅 Mañana</option>
+                            <option value="Tarde">🌇 Tarde</option>
                         </select>
                     </div>
 
+                    <!-- LITROS PESADOS -->
                     <div class="form-group">
                         <label for="litrosInput">Litros Pesados (L):</label>
-                        <input type="number" id="litrosInput" step="0.1" min="0.1" placeholder="Ej: 9.5" required>
+                        <input type="number" id="litrosInput" step="0.1" min="0.1" placeholder="Ej: 9.5" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box;">
                     </div>
+
+                    <!-- CONDICIÓN CORPORAL -->
+                    <div class="form-group">
+                        <label for="condicionCorporal">Condición Corporal (1 - 5):</label>
+                        <input type="number" id="condicionCorporal" step="0.25" min="1.0" max="5.0" placeholder="Ej: 3.25" value="3.0" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box;">
+                    </div>
+
+                    <!-- MÓDULO SANITARIO / UBRE -->
+                    <div class="form-group">
+                        <label for="estadoUbre">Módulo Sanitario (Ubre):</label>
+                        <select id="estadoUbre" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                            <option value="Sana">✅ 4 Cuartos Sanos</option>
+                            <option value="Sospecha">⚠️ Sospecha de Mastitis</option>
+                            <option value="Afectada">❌ Cuarto Bloqueado / Infectado</option>
+                        </select>
+                    </div>
+
+                    <!-- OBSERVACIONES Y NOVEDADES -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="observacionesInput">Observaciones o Novedades:</label>
+                        <input type="text" id="observacionesInput" placeholder="Ej: Leve inflamación / Consumo normal de forraje" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box;">
+                    </div>
+
                 </div>
 
-                <button type="submit" class="btn btn-success">
-                    💾 Guardar Pesaje Localmente
+                <button type="submit" class="btn btn-success" style="width: 100%; padding: 12px; font-size: 1rem; font-weight: bold; cursor: pointer;">
+                    💾 Guardar Pesaje Localmente en Cola FIFO
                 </button>
             </form>
 
             <div id="statusAlert" class="alert-box"></div>
         </section>
 
-        <!-- Tabla FIFO: Cola de Sincronización Local -->
+        <!-- TABLA FIFO: COLA DE SINCRONIZACIÓN LOCAL -->
         <section class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
                 <div>
@@ -100,13 +138,16 @@
                     <thead>
                         <tr>
                             <th>Bovino</th>
+                            <th> Jornada</th>
                             <th>Pesaje</th>
-                            <th>ΔP (%)</th>
+                            <th>CC</th>
+                            <th>Sanidad</th>
+                            <th>Observaciones</th>
                             <th>Estado Regla</th>
                         </tr>
                     </thead>
                     <tbody id="tablaCola">
-                        <!-- Las filas se renderizan dinámicamente desde app.js -->
+                        <!-- Las filas se renderizan dinámicamente mediante app.js -->
                     </tbody>
                 </table>
             </div>
@@ -114,12 +155,12 @@
 
     </main>
 
-    <!-- Pie de Página -->
+    <!-- PIE DE PÁGINA -->
     <footer>
         LactisValle — Sistema de Control Lechero & Sanidad Bovino
     </footer>
 
-    <!-- Vinculación del Script Principal -->
+    <!-- VINCULACIÓN DEL SCRIPT PRINCIPAL -->
     <script src="app.js"></script>
 </body>
 </html>

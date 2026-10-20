@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LactisValle — Menú Principal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="menu.css">
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR DE NAVEGACIÓN -->
+    <header class="navbar">
+        <div class="navbar-brand">
+            <span>🐄</span> LactisValle PWA
+        </div>
+
+        <div id="user-profile-container" class="user-profile-container" style="display: none;">
+            <button class="user-profile-badge" onclick="toggleUserMenu(event)">
+                <span class="user-avatar-icon">👤</span>
+                <span id="user-display-name">Usuario</span>
+            </button>
+            
+            <div id="user-dropdown-menu" class="user-dropdown-custom">
+                <button class="dropdown-logout-btn" onclick="cerrarSesion()">
+                    🚪 Cerrar Sesión
+                </button>
+            </div>
+        </div>
+
+        <div class="status-badge badge-online" id="networkStatus">
+            <span class="status-dot dot-online" id="networkDot"></span>
+            <span id="networkText">Modo Offline Listo</span>
+        </div>
+    </header>
+
+    <!-- PANEL PRINCIPAL CON RETÍCULA CORREGIDA -->
+    <main class="main-container">
+        
+        <div class="menu-header">
+            <h1>Panel Principal</h1>
+            <p>Selecciona el módulo o la acción que deseas realizar:</p>
+        </div>
+
+        <div class="menu-grid-container">
+            
+            <!-- Opción 1: Registrar Ganado / Pesaje -->
+            <div class="menu-card" onclick="window.location.href='dashboard.html'">
+                <div class="card-icon">🐄</div>
+                <h3 class="card-title-green">Registrar mi Ganado / Pesaje</h3>
+                <p>Ingreso de volumen en potrero, cola FIFO local y alertas de desviación (RN-02).</p>
+            </div>
+
+            <!-- Opción 2: Reportes & Estadísticas -->
+            <div class="menu-card" onclick="alert('Módulo de Reportes próximamente disponible.')">
+                <div class="card-icon">📊</div>
+                <h3 class="card-title-blue">Reportes & Estadísticas</h3>
+                <p>Consulta históricos de producción lechera y análisis comparativos.</p>
+            </div>
+
+            <!-- Opción 3: Notificaciones & Alertas -->
+            <div class="menu-card" onclick="alert('No hay nuevas alertas sanitarias.')">
+                <div class="card-icon">🔔</div>
+                <h3 class="card-title-orange">Notificaciones & Alertas</h3>
+                <p>Avisos de mastitis, estado de sincronización y eventos críticos del hato.</p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        LactisValle — Sistema de Control Lechero & Sanidad Bovino
+    </footer>
+
+    <script src="menu.js"></script>
+</body>
+</html>
