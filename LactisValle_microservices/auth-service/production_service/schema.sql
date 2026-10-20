@@ -10,9 +10,6 @@ COLLATE utf8mb4_unicode_ci;
 
 USE lactisvalle_db;
 
--- -----------------------------------------------------------------------------
--- 1. TABLA: usuarios (Autenticación e inicio de sesión)
--- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario VARCHAR(100) NOT NULL UNIQUE,
@@ -20,9 +17,6 @@ CREATE TABLE IF NOT EXISTS usuarios (
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- -----------------------------------------------------------------------------
--- 2. TABLA: bovino (Catálogo de referencia de animales - Opcional)
--- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS bovino (
     id_bovino VARCHAR(50) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
@@ -31,9 +25,6 @@ CREATE TABLE IF NOT EXISTS bovino (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- -----------------------------------------------------------------------------
--- 3. TABLA: registro_ordeno (Transacciones de pesaje y control sanitario)
--- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS registro_ordeno (
     id_ordeno INT AUTO_INCREMENT PRIMARY KEY,
     id_bovino VARCHAR(50) NOT NULL,
@@ -52,9 +43,6 @@ CREATE TABLE IF NOT EXISTS registro_ordeno (
     CONSTRAINT chk_ordeno_litros CHECK (litros_pesados >= 0.00 AND litros_pesados <= 99.99)
 ) ENGINE=InnoDB;
 
--- -----------------------------------------------------------------------------
--- 4. TABLA: alerta_sanitaria (Alertas por caída de producción o mastitis)
--- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS alerta_sanitaria (
     id_alerta INT AUTO_INCREMENT PRIMARY KEY,
     id_ordeno INT NOT NULL,
@@ -68,10 +56,6 @@ CREATE TABLE IF NOT EXISTS alerta_sanitaria (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
-
--- =============================================================================
--- ÍNDICES DE OPTIMIZACIÓN DE CONSULTAS
--- =============================================================================
 CREATE INDEX idx_bovino_nombre ON bovino(nombre);
 CREATE INDEX idx_ordeno_bovino_fecha ON registro_ordeno(id_bovino, fecha_registro DESC);
 CREATE INDEX idx_ordeno_alerta ON registro_ordeno(es_alerta);
