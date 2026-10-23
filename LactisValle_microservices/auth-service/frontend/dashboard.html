@@ -14,7 +14,6 @@
             <span>🐄</span> LactisValle PWA
         </div>
 
-        <!-- PERFIL DE USUARIO Y MENÚ DESPLEGABLE -->
         <div id="user-profile-container" class="user-profile-container" style="display: none;">
             <button class="user-profile-badge" onclick="toggleUserMenu(event)">
                 <span class="user-avatar-icon">👤</span>
@@ -28,7 +27,6 @@
             </div>
         </div>
 
-        <!-- INDICADOR DE MODO OFFLINE/ONLINE -->
         <div class="status-badge badge-online" id="networkStatus">
             <span class="status-dot dot-online" id="networkDot"></span>
             <span id="networkText">Modo Offline Listo</span>
@@ -62,7 +60,7 @@
             <form id="ordenoForm">
                 <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
                     
-                    <!-- ENTRADA DE TEXTO LIBRE LIMPIA PARA EL BOVINO -->
+                    <!-- ENTRADA DE TEXTO LIBRE PARA EL BOVINO -->
                     <div class="form-group">
                         <label for="bovinoInput">Bovino Identificado:</label>
                         <input 
@@ -128,7 +126,7 @@
                     <h2 class="card-title" style="margin:0;">Cola FIFO Local</h2>
                     <p class="card-subtitle" style="margin:0;">Registros retenidos localmente esperando conexión</p>
                 </div>
-                <button id="syncBtn" class="btn btn-primary" style="width: auto;">
+                <button id="syncBtn" class="btn btn-primary" style="width: auto;" onclick="sincronizarColaMySQL()">
                     🔄 Sincronizar con MySQL
                 </button>
             </div>
@@ -137,8 +135,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Bovino</th>
-                            <th> Jornada</th>
+                            <th>Bovino & Jornada</th>
                             <th>Pesaje</th>
                             <th>CC</th>
                             <th>Sanidad</th>
@@ -147,7 +144,7 @@
                         </tr>
                     </thead>
                     <tbody id="tablaCola">
-                        <!-- Las filas se renderizan dinámicamente mediante app.js -->
+                        <!-- Las filas se renderizan dinámicamente -->
                     </tbody>
                 </table>
             </div>
@@ -155,12 +152,10 @@
 
     </main>
 
-    <!-- PIE DE PÁGINA -->
     <footer>
         LactisValle — Sistema de Control Lechero & Sanidad Bovino
     </footer>
 
-    <!-- VINCULACIÓN DEL SCRIPT PRINCIPAL -->
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,177 +1,27 @@
-// ==========================================
-// CONFIGURACIÓN DE LA API DE FLASK
-// ==========================================
-const AUTH_API_URL = "http://127.0.0.1:5000/api";
+// URL base del backend en Flask
+const API_BASE_URL = "http://127.0.0.1:5000/api";
 
-// ==========================================
-// 1. GESTIÓN DE VISTAS (LOGIN / REGISTRO)
-// ==========================================
-function mostrarRegistro() {
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
-    if (loginForm) loginForm.classList.add("oculto");
-    if (registerForm) registerForm.classList.remove("oculto");
-}
+// Cargar la cola desde localStorage al iniciar
+let colaPesajes = JSON.parse(localStorage.getItem('cola_pesajes')) || [];
 
-function mostrarLogin() {
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
-    if (registerForm) registerForm.classList.add("oculto");
-    if (loginForm) loginForm.classList.remove("oculto");
-}
-
-// ==========================================
-// 2. AUTENTICACIÓN CON FLASK Y MYSQL
-// ==========================================
-
-// Registrar nuevo usuario consumiendo Flask
-async function registrar() {
-    let u = document.getElementById("regUser").value.trim();
-    let p = document.getElementById("regPass").value.trim();
-
-    if (u === "" || p === "") {
-        alert("Por favor completa todos los campos.");
-        return;
-    }
-
-    try {
-        let response = await fetch(`${AUTH_API_URL}/register`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usuario: u, password: p })
-        });
-
-        let data = await response.json();
-
-        if (response.ok && data.success) {
-            alert(data.message || "¡Usuario registrado con éxito!");
-            document.getElementById("regUser").value = "";
-            document.getElementById("regPass").value = "";
-            mostrarLogin();
-        } else {
-            alert(data.message || "Error al registrar el usuario.");
-        }
-    } catch (error) {
-        console.error("Error de conexión:", error);
-        alert("No se pudo conectar con el microservicio de autenticación de Flask.");
-    }
-}
-
-// Validar inicio de sesión consumiendo Flask
-async function validarLogin() {
-    let u = document.getElementById("loginUser").value.trim();
-    let p = document.getElementById("loginPass").value.trim();
-
-    if (u === "" || p === "") {
-        alert("Por favor ingresa usuario y contraseña.");
-        return;
-    }
-
-    try {
-        let response = await fetch(`${AUTH_API_URL}/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usuario: u, password: p })
-        });
-
-        let data = await response.json();
-
-        if (response.ok && data.success) {
-            // Guardamos el nombre exacto del usuario para el perfil del dashboard
-            localStorage.setItem("usuario_activo", u);
-            alert(data.message || `¡Bienvenido, ${u}!`);
-            
-            // Redirigir al panel principal
-            window.location.href = "menu.html";
-        } else {
-            alert(data.message || "Credenciales incorrectas.");
-        }
-    } catch (error) {
-        console.error("Error de conexión:", error);
-        alert("No se pudo conectar con el servidor backend de autenticación.");
-    }
-}
-
-// ==========================================
-// 3. PERFIL Y MENÚ DESPLEGABLE EN EL DASHBOARD
-// ==========================================
-
-// Alternar visibilidad del menú desplegable del usuario
-function toggleUserMenu(event) {
-    if (event) event.stopPropagation();
-    const dropdown = document.getElementById('user-dropdown-menu');
-    if (dropdown) {
-        dropdown.classList.toggle('show');
-    }
-}
-
-// Cerrar el menú desplegable al hacer clic fuera de él
-window.addEventListener('click', () => {
-    const dropdown = document.getElementById('user-dropdown-menu');
-    if (dropdown && dropdown.classList.contains('show')) {
-        dropdown.classList.remove('show');
-    }
-});
-
-// Cargar el nombre del usuario activo en la barra superior
-function cargarPerfilUsuario() {
-    const usuarioActivo = localStorage.getItem('usuario_activo');
-    const container = document.getElementById('user-profile-container');
-    const nameSpan = document.getElementById('user-display-name');
-
-    if (usuarioActivo) {
-        if (nameSpan) nameSpan.textContent = usuarioActivo;
-        if (container) container.style.display = 'inline-block';
-    } else {
-        if (container) container.style.display = 'none';
-    }
-}
-
-// Cerrar sesión de forma segura y regresar al inicio de sesión
-function cerrarSesion() {
-    if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
-        localStorage.removeItem('usuario_activo');
-        
-        // Se usa redirección dinámica: busca index.html en la misma carpeta
-        // Si tu login es un archivo llamado index.html dentro de frontend:
-        window.location.href = "index.html";
-        
-        // NOTA: Si tu archivo de login se llama exactamente inicio_S.html 
-        // y está en la misma carpeta, usa:
-        // window.location.href = "./inicio_S.html";
-    }
-}
-
-// ==========================================
-// 4. EXPORTAR USUARIOS A JSON
-// ==========================================
-function exportarUsuariosJSON() {
-    let usuarios = {};
-    for (let i = 0; i < localStorage.length; i++) {
-        let clave = localStorage.key(i);
-        if (clave !== "usuario_activo") {
-            usuarios[clave] = localStorage.getItem(clave);
-        }
-    }
-
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(usuarios, null, 2));
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "usuarios_lactisvalle.json");
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-}
-
-// ==========================================
-// 5. INICIALIZADOR AUTOMÁTICO AL CARGAR PÁGINA
-// ==========================================
+// Eventos de inicio
 document.addEventListener('DOMContentLoaded', () => {
-    cargarPerfilUsuario();
+    renderizarTablaCola();
+    actualizarKPIs();
+
+    const ordenoForm = document.getElementById('ordenoForm');
+    if (ordenoForm) {
+        ordenoForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Evita que recargue la página
+            guardarPesajeLocal();
+        });
+    }
 });
 
+// ==========================================
+// 1. GUARDAR EN COLA LOCAL (FIFO)
+// ==========================================
 function guardarPesajeLocal() {
-    // Captura el texto escrito en el nuevo input
     const bovinoInput = document.getElementById('bovinoInput');
     const jornadaSelect = document.getElementById('jornadaSelect');
     const litrosInput = document.getElementById('litrosInput');
@@ -179,91 +29,140 @@ function guardarPesajeLocal() {
     const estadoUbre = document.getElementById('estadoUbre');
     const observacionesInput = document.getElementById('observacionesInput');
 
-    if (!bovinoInput.value.trim() || !litrosInput.value) {
+    if (!bovinoInput || !litrosInput || !bovinoInput.value.trim() || !litrosInput.value) {
         alert("Por favor escribe el identificador del bovino y los litros pesados.");
         return;
     }
 
-    const bovino = bovinoInput.value.trim(); // Lee lo que escribes manualmente
-    const jornada = jornadaSelect.value;
+    const bovino = bovinoInput.value.trim();
+    const jornada = jornadaSelect ? jornadaSelect.value : "Mañana";
     const litros = parseFloat(litrosInput.value);
-    const cc = condicionCorporal.value || "3.0";
-    const sanidad = estadoUbre.value;
-    const obs = observacionesInput.value.trim() || "Sin novedad";
+    const cc = condicionCorporal ? (parseFloat(condicionCorporal.value) || 3.0) : 3.0;
+    const sanidad = estadoUbre ? estadoUbre.value : "Sana";
+    const obs = observacionesInput ? (observacionesInput.value.trim() || "Sin novedad") : "Sin novedad";
 
-    // Regla de desviación o alerta sanitaria
+    // Simulación de cálculo de regla RN-02
     const deltaP = parseFloat((Math.random() * 25).toFixed(1)); 
     const estadoRegla = (deltaP >= 15 || sanidad !== "Sana") ? "Alerta Sanitaria / ΔP" : "Normal";
 
     const nuevoRegistro = {
         id: Date.now(),
-        bovino,
-        jornada,
-        litros,
-        cc,
-        sanidad,
-        obs,
-        deltaP,
-        estadoRegla,
+        bovino: bovino,
+        jornada: jornada,
+        litros: litros,
+        cc: cc,
+        sanidad: sanidad,
+        obs: obs,
+        deltaP: deltaP,
+        estadoRegla: estadoRegla,
         hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    // Guardar en la cola FIFO local
+    // Insertar en la cola y guardar en localStorage
     colaPesajes.push(nuevoRegistro);
     localStorage.setItem('cola_pesajes', JSON.stringify(colaPesajes));
 
-    alert(`¡Pesaje de "${bovino}" registrado en la cola FIFO local!`);
+    // Resetear formulario
     document.getElementById('ordenoForm').reset();
 
-    actualizarKPIs();
+    // Re-renderizar la vista
     renderizarTablaCola();
+    actualizarKPIs();
+
+    alert(`¡Pesaje de "${bovino}" retenido localmente en la cola FIFO!`);
 }
 
-// Función auxiliar para registrar dinámicamente nuevos bovinos en la lista desplegable
-function agregarBovinoADataList(nuevoBovino) {
-    const datalist = document.getElementById('listaBovinos');
-    if (!datalist) return;
-
-    const opciones = Array.from(datalist.options).map(opt => opt.value);
-    if (!opciones.includes(nuevoBovino)) {
-        const nuevaOpcion = document.createElement('option');
-        nuevaOpcion.value = nuevoBovino;
-        datalist.appendChild(nuevaOpcion);
-    }
-}
-
+// ==========================================
+// 2. RENDERIZAR TABLA EN LA INTERFAZ
+// ==========================================
 function renderizarTablaCola() {
-    const tbody = document.getElementById('tablaCola');
-    if (!tbody) return;
+    const tablaCola = document.getElementById('tablaCola');
+    if (!tablaCola) return;
 
-    tbody.innerHTML = '';
+    colaPesajes = JSON.parse(localStorage.getItem('cola_pesajes')) || [];
 
     if (colaPesajes.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #666; padding: 15px;">No hay registros pendientes en la cola local.</td></tr>`;
+        tablaCola.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; color: #777; padding: 15px;">
+                    No hay registros pendientes en la cola local.
+                </td>
+            </tr>`;
         return;
     }
 
-    colaPesajes.forEach((item) => {
-        const tr = document.createElement('tr');
-        const esAlerta = item.estadoRegla.includes("Alerta");
-
-        tr.innerHTML = `
-            <td><strong>${item.bovino}</strong><br><small style="color: #666;">${item.jornada} (${item.hora})</small></td>
-            <td>${item.litros} L</td>
-            <td>${item.cc}</td>
-            <td>${item.sanidad}</td>
-            <td><small>${item.obs}</small></td>
+    tablaCola.innerHTML = colaPesajes.map(reg => `
+        <tr>
+            <td><strong>${reg.bovino}</strong><br><small style="color:#666;">${reg.jornada} (${reg.hora})</small></td>
+            <td><strong>${reg.litros} L</strong></td>
+            <td>${reg.cc}</td>
+            <td>${reg.sanidad}</td>
+            <td>${reg.obs}</td>
             <td>
-                <span style="padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; background-color: ${esAlerta ? '#ffebee' : '#e8f5e9'}; color: ${esAlerta ? '#c62828' : '#2e7d32'};">
-                    ${item.estadoRegla}
+                <span class="status-badge ${reg.estadoRegla.includes('Alerta') ? 'badge-offline' : 'badge-online'}" style="font-size: 0.8rem;">
+                    ${reg.estadoRegla}
                 </span>
             </td>
-        `;
-        tbody.appendChild(tr);
-    });
+        </tr>
+    `).join('');
 }
-function limpiarColaLocal() {
-    localStorage.removeItem('cola_pesajes');
-    alert("Cola local limpiada con éxito.");
-    location.reload();
+
+// ==========================================
+// 3. ACTUALIZAR KPIS E INDICADORES
+// ==========================================
+function actualizarKPIs() {
+    const kpiCount = document.getElementById('kpiQueueCount');
+    if (kpiCount) {
+        const total = colaPesajes.length;
+        kpiCount.textContent = `${total} Pendiente${total === 1 ? '' : 's'}`;
+    }
+}
+
+// ==========================================
+// 4. SINCRONIZAR COLA CON MYSQL
+// ==========================================
+async function sincronizarColaMySQL() {
+    colaPesajes = JSON.parse(localStorage.getItem('cola_pesajes')) || [];
+
+    if (colaPesajes.length === 0) {
+        alert("No hay registros pendientes en la cola local para sincronizar.");
+        return;
+    }
+
+    const syncBtn = document.getElementById('syncBtn');
+    if (syncBtn) {
+        syncBtn.disabled = true;
+        syncBtn.textContent = "⏳ Sincronizando con MySQL...";
+    }
+
+    try {
+        let response = await fetch(`${API_BASE_URL}/sincronizar_pesajes`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ registros: colaPesajes })
+        });
+
+        let data = await response.json();
+
+        if (response.ok && data.success) {
+            alert(data.message || "¡Sincronización exitosa con la base de datos MySQL!");
+
+            // Limpiar la cola local tras éxito
+            localStorage.removeItem('cola_pesajes');
+            colaPesajes = [];
+
+            renderizarTablaCola();
+            actualizarKPIs();
+        } else {
+            alert(data.message || "Ocurrió un error al procesar la información en la base de datos.");
+        }
+    } catch (error) {
+        console.error("Error al sincronizar:", error);
+        alert("Sin conexión con el servidor Flask. Los datos permanecen a salvo en la cola FIFO local.");
+    } finally {
+        if (syncBtn) {
+            syncBtn.disabled = false;
+            syncBtn.textContent = "🔄 Sincronizar con MySQL";
+        }
+    }
 }
