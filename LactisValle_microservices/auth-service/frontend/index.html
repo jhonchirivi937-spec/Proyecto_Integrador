@@ -4,68 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LactisValle — Acceso al Sistema</title>
-    <!-- Hoja de estilos del inicio de sesión -->
     <link rel="stylesheet" href="inicio_S.css">
 </head>
-<body>
+<body style="background-color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: sans-serif;">
 
-    <div class="login-container">
-        <div class="logo-section">
-            <span class="emoji-logo">🐄</span>
-            <h1>LactisValle</h1>
-            <p>Sistema de Control Lechero - Valle de Ubaté</p>
-        </div>
+    <div class="login-card" style="background: #1e293b; padding: 30px; border-radius: 12px; width: 100%; max-width: 380px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        
+        <div style="font-size: 3rem; margin-bottom: 10px;">🐄</div>
+        <h1 style="color: #38bdf8; margin: 0 0 5px 0; font-size: 1.8rem;">LactisValle</h1>
+        <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 25px;">Sistema de Control Lechero - Valle de Ubaté</p>
 
-        <!-- FORMULARIO DE INICIO DE SESIÓN -->
-        <form id="loginForm" class="auth-form" onsubmit="event.preventDefault(); validarLogin();">
-            <h2>Acceso al Sistema</h2>
-            
-            <div class="input-group">
-                <input type="text" id="loginUser" placeholder="Usuario o cédula" required>
+        <h3 id="formTitle" style="margin-bottom: 20px; font-weight: 500;">Acceso al Sistema</h3>
+
+        <!-- CONTENEDOR DE NOTIFICACIONES -->
+        <div id="loginAlert" style="display: none; padding: 10px; margin-bottom: 15px; border-radius: 6px; font-size: 0.85rem; text-align: center;"></div>
+
+        <!-- FORMULARIO DE ACCESO Y REGISTRO -->
+        <form id="loginForm">
+            <div style="margin-bottom: 15px; text-align: left;">
+                <input 
+                    type="text" 
+                    id="loginUser" 
+                    placeholder="Usuario o cédula" 
+                    required 
+                    style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box;"
+                >
             </div>
-            
-            <div class="input-group">
-                <input type="password" id="loginPass" placeholder="Contraseña" required>
-            </div>
-            
-            <button type="submit" class="btn-submit">Ingresar</button>
-            
-            <div class="divider">ó</div>
 
-            <!-- BOTÓN PARA MOSTRAR EL FORMULARIO DE REGISTRO -->
-            <button type="button" class="btn-secondary" onclick="mostrarRegistro()">
-                📝 Registrar Usuario
+            <div style="margin-bottom: 20px; text-align: left;">
+                <input 
+                    type="password" 
+                    id="loginPassword" 
+                    placeholder="Contraseña" 
+                    required 
+                    style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box;"
+                >
+            </div>
+
+            <button 
+                type="submit" 
+                id="btnLogin" 
+                style="width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem;"
+            >
+                Ingresar
             </button>
         </form>
 
-        <!-- FORMULARIO DE REGISTRO DE USUARIO (Oculto al inicio) -->
-        <form id="registerForm" class="auth-form oculto" onsubmit="event.preventDefault(); registrar();">
-            <h2>Registro de Usuario</h2>
-            
-            <div class="input-group">
-                <input type="text" id="regUser" placeholder="Nuevo usuario o cédula" required>
-            </div>
-            
-            <div class="input-group">
-                <input type="password" id="regPass" placeholder="Crear contraseña" required>
-            </div>
-            
-            <button type="submit" class="btn-submit">Guardar Registro</button>
-            
-            <p class="switch-text">
-                ¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin()">Inicia sesión aquí</a>
-            </p>
-        </form>
+        <div style="margin: 20px 0; color: #64748b; font-size: 0.8rem;">ó</div>
 
-        <!-- BOTÓN PARA EXPORTAR BASE DE DATOS LOCAL JSON -->
-        <div class="export-box">
-            <button type="button" onclick="exportarUsuariosJSON()" class="btn-export">
-                📥 Descargar Base de Datos (JSON)
-            </button>
-        </div>
+        <!-- BOTÓN REGISTRAR USUARIO -->
+        <button 
+            type="button" 
+            id="btnRegisterToggle" 
+            onclick="toggleModoRegistro()" 
+            style="width: 100%; padding: 10px; background: transparent; border: 1px solid #38bdf8; color: #38bdf8; border-radius: 6px; cursor: pointer; margin-bottom: 15px; font-weight: bold;"
+        >
+            📑 Registrar Usuario
+        </button>
+
+        <!-- BOTÓN DESCARGAR BASE DE DATOS JSON -->
+        <button 
+            type="button" 
+            onclick="descargarBaseDatosJSON()" 
+            style="width: 100%; padding: 8px; background: #334155; border: none; color: #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 0.8rem;"
+        >
+            📲 Descargar Base de Datos (JSON)
+        </button>
     </div>
 
-    <!-- Script de lógica -->
-    <script src="app.js"></script>
+    <!-- VINCULACIÓN CON EL ARCHIVO JAVASCRIPT EXTERNO -->
+    <script src="inicio_S.js"></script>
 </body>
 </html>

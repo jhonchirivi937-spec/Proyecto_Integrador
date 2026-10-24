@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LactisValle — Reportes & Analítica</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Cargamos Chart.js únicamente en este apartado -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="navbar-brand">
+            <span>📊</span> LactisValle — Módulo de Reportes
+        </div>
+        <div>
+            <a href="menu.html" class="btn btn-primary" style="text-decoration: none; padding: 6px 12px; font-size: 0.9rem;">
+                ⬅️ Volver al Registro
+            </a>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <!-- TARJETAS DE MÉTRICAS GENERALES -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">TOTAL LECHE REGISTRADA</div>
+                <div class="kpi-value" id="kpiTotalLitros">0.0 L</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">PROMEDIO POR ORDEÑO</div>
+                <div class="kpi-value" id="kpiPromedio">0.0 L</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">ALERTAS DETECTADAS</div>
+                <div class="kpi-value" id="kpiTotalAlertas" style="color: #c62828;">0</div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN PRINCIPAL DE LA GRÁFICA -->
+        <section class="card" style="margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h2 class="card-title" style="margin: 0;">Tendencia de Producción por Bovino</h2>
+                    <p class="card-subtitle" style="margin: 0;">Histórico consolidado sincronizado desde MySQL</p>
+                </div>
+                <button class="btn btn-success" onclick="cargarAnalitica()" style="width: auto;">
+                    🔄 Actualizar Datos
+                </button>
+            </div>
+
+            <div style="position: relative; height: 350px; width: 100%;">
+                <canvas id="chartProduccion"></canvas>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        LactisValle — Sistema de Control Lechero & Sanidad Bovino
+    </footer>
+
+    <script src="reports.js"></script>
+</body>
+</html>
