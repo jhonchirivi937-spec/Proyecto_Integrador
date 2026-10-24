@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LactisValle — Menú Principal</title>
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR -->
+    <header class="navbar">
+        <div class="navbar-brand">
+            <span>🐄</span> LactisValle — Menú Principal
+        </div>
+        <button class="btn btn-primary" onclick="cerrarSesion()" style="width: auto; padding: 6px 12px;">
+            🚪 Cerrar Sesión
+        </button>
+    </header>
+
+    <!-- CONTENEDOR DE TARJETAS DE NAVEGACIÓN -->
+    <main class="main-container" style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+        
+        <h1 style="text-align: center; margin-bottom: 30px; color: #1e293b;">Panel Principal</h1>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            
+            <!-- MÓDULO 1: REGISTRO DE PESAJE -->
+            <div class="card" style="text-align: center; padding: 30px; cursor: pointer;" onclick="location.href='dashboard.html'">
+                <div style="font-size: 3.5rem; margin-bottom: 15px;">📋</div>
+                <h2 class="card-title" style="margin-bottom: 10px;">Registrar mi Ganado / Pesaje</h2>
+                <p class="card-subtitle" style="margin-bottom: 20px;">Ingreso de volumen en potrero, cola FIFO local y alertas de desviación.</p>
+                <a href="dashboard.html" class="btn btn-success" style="text-decoration: none; display: inline-block;">Ingresar al Registro</a>
+            </div>
+
+            <!-- MÓDULO 2: REPORTES Y ESTADÍSTICAS -->
+            <div class="card" style="text-align: center; padding: 30px; cursor: pointer;" onclick="location.href='reports.html'">
+                <div style="font-size: 3.5rem; margin-bottom: 15px;">📊</div>
+                <h2 class="card-title" style="margin-bottom: 10px;">Reportes & Estadísticas</h2>
+                <p class="card-subtitle" style="margin-bottom: 20px;">Consulta histórico de producción lechera y análisis comparativos.</p>
+                <a href="reports.html" class="btn btn-primary" style="text-decoration: none; display: inline-block;">Ver Reportes</a>
+            </div>
+
+            <!-- MÓDULO 3: NOTIFICACIONES Y ALERTAS -->
+            <div class="card" style="text-align: center; padding: 30px;">
+                <div style="font-size: 3.5rem; margin-bottom: 15px;">🔔</div>
+                <h2 class="card-title" style="margin-bottom: 10px;">Notificaciones & Alertas</h2>
+                <p class="card-subtitle" style="margin-bottom: 20px;">Avisos de mastitis, estado de sincronización y eventos críticos del hato.</p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="menu.js"></script>
+</body>
+</html>

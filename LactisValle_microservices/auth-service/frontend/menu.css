@@ -1,0 +1,80 @@
+/* --- ESTILOS EXCLUSIVOS PARA EL MENÚ PRINCIPAL --- */
+
+.menu-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.menu-header h1 {
+    color: #1a2332;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.menu-header p {
+    color: #555555;
+    font-size: 1rem;
+}
+
+/* Grilla responsiva alineada */
+.menu-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 100px 0px;
+}
+
+/* Tarjeta individual */
+.menu-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: #2e7d32;
+}
+
+.card-icon {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+}
+
+.menu-card p {
+    color: #666666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Colores de títulos por módulo */
+.card-title-green {
+    color: #1b5e20;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.card-title-blue {
+    color: #0d47a1;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.card-title-orange {
+    color: #e65100;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}

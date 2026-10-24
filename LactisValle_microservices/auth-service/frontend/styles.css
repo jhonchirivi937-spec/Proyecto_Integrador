@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LactisValle - Control de Ordeño & Sanidad Bovino</title>
-    <style>
-        /* Modern CSS Variables & Reset */
-        :root {
-            --primary-color: #1e293b;
+:root {
+    --primary-color: #1e293b;
             --primary-light: #334155;
             --accent-color: #2563eb;
             --success-color: #16a34a;
@@ -20,16 +12,14 @@
             --border-color: #e2e8f0;
             --radius: 10px;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        * {
-            box-sizing: border-box;
+}
+*{
+     box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
-        }
-
-        body {
+}
+body {
             background-color: var(--bg-body);
             color: var(--text-main);
             padding-bottom: 40px;
@@ -259,106 +249,94 @@
             font-size: 0.8rem;
             color: var(--text-muted);
         }
-    </style>
-</head>
-<body>
+        /* ==========================================
+   ESTILOS MEJORADOS: PERFIL Y MENÚ DESPLEGABLE
+   ========================================== */
 
-    <!-- Bar de Navegación Superior -->
-    <header class="navbar">
-        <div class="navbar-brand">
-            <span>🐄</span> LactisValle PWA
-        </div>
-        <div class="status-badge badge-online" id="networkStatus">
-            <span class="status-dot dot-online" id="networkDot"></span>
-            <span id="networkText">Modo Offline Listo</span>
-        </div>
-    </header>
+.user-profile-container {
+    position: relative;
+    display: inline-block;
+}
 
-    <!-- Contenedor Principal -->
-    <main class="main-container">
+/* Botón principal del perfil en la barra superior */
+.user-profile-badge {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
 
-        <!-- Panel KPI Resumen -->
-        <section class="kpi-grid">
-            <div class="kpi-card">
-                <div class="kpi-title">Registros en Cola Local</div>
-                <div class="kpi-value" id="kpiQueueCount">Pendientes</div>
-            </div>
-            <div class="kpi-card warning">
-                <div class="kpi-title">Regla Activa (RN-02)</div>
-                <div class="kpi-value">ΔP ≥ 15%</div>
-            </div>
-            <div class="kpi-card danger">
-                <div class="kpi-title">Módulo Sanitario</div>
-                <div class="kpi-value">Alerta Mastitis</div>
-            </div>
-        </section>
+.user-profile-badge:hover {
+    background: linear-gradient(135deg, #388e3c, #2e7d32);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+}
 
-        <!-- Formulario Principal: Pesaje a Potrero -->
-        <section class="card">
-            <h1 class="card-title">Captura de Pesaje en Potrero</h1>
-            <p class="card-subtitle">Ingreso de volumen y evaluación automática de desviaciones críticas</p>
+/* Icono circular del avatar */
+.user-avatar-icon {
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.25);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
 
-            <form id="ordenoForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="bovinoSelect">Bovino Identificado:</label>
-                        <select id="bovinoSelect" required>
-                            <option value="CO-710240">CO-710240 — Lucero (12.5 L)</option>
-                            <option value="CO-00988A">CO-00988A — Mariposa (15.0 L)</option>
-                        </select>
-                    </div>
+/* Menú desplegable elegante */
+.user-dropdown-custom {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 120%;
+    background-color: #ffffff;
+    min-width: 180px;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 8px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
 
-                    <div class="form-group">
-                        <label for="litrosInput">Litros Pesados (L):</label>
-                        <input type="number" id="litrosInput" step="0.1" min="0.1" placeholder="Ej: 9.5" required>
-                    </div>
-                </div>
+/* Clase que activa la visibilidad con animación fluida */
+.user-dropdown-custom.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
 
-                <button type="submit" class="btn btn-success">
-                    💾 Guardar Pesaje Localmente
-                </button>
-            </form>
+/* Botón interno de Cerrar Sesión */
+.dropdown-logout-btn {
+    width: 100%;
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    color: #c53030;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
 
-            <div id="statusAlert" class="alert-box"></div>
-        </section>
-
-        <!-- Tabla FIFO: Cola de Sincronización Local -->
-        <section class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
-                <div>
-                    <h2 class="card-title" style="margin:0;">Cola FIFO Local</h2>
-                    <p class="card-subtitle" style="margin:0;">Registros retenidos localmente esperando conexión</p>
-                </div>
-                <button id="syncBtn" class="btn btn-primary" style="width: auto;">
-                    🔄 Sincronizar con MySQL
-                </button>
-            </div>
-
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Bovino</th>
-                            <th>Pesaje</th>
-                            <th>ΔP (%)</th>
-                            <th>Estado Regla</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaCola">
-                        <!-- Las filas se renderizan dinámicamente desde app.js -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Pie de Página -->
-    <footer>
-        LactisValle — Sistema de Control Lechero & Sanidad Bovino
-    </footer>
-
-    <!-- Vinculación del Script Principal -->
-    <script src="app.js"></script>
-</body>
-</html>
+.dropdown-logout-btn:hover {
+    background-color: #f56565;
+    color: #ffffff;
+    border-color: #f56565;
+}
