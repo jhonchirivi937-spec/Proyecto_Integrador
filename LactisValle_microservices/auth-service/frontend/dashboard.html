@@ -42,7 +42,7 @@
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">MÓDULO SANITARIO</div>
-                <div class="kpi-value" style="color: #c62828;">Alerta Mastitis</div>
+                <div class="kpi-value" style="color: #c62828;">Alerta</div>
             </div>
         </section>
 
@@ -53,14 +53,14 @@
 
             <form id="ordenoForm">
                 <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
-                    
+
                     <div class="form-group">
                         <label for="bovinoInput">Bovino Identificado:</label>
-                        <input 
-                            type="text" 
-                            id="bovinoInput" 
-                            placeholder="Escribe el código o nombre del bovino..." 
-                            required 
+                        <input
+                            type="text"
+                            id="bovinoInput"
+                            placeholder="Escribe el código o nombre del bovino..."
+                            required
                             style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box;"
                         >
                     </div>
@@ -84,10 +84,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="estadoUbre">Módulo Sanitario (Ubre):</label>
+                        <label for="estadoUbre">Novedad operativa en potrero : </label>
                         <select id="estadoUbre" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-                            <option value="Sana">✅ 4 Cuartos Sanos</option>
-                            <option value="Sospecha">⚠️ Sospecha de Mastitis</option>
+                            <option value="Sana">✅ Sin novedad </option>
+                            <option value="Sospecha">⚠️ Sospecha sanitaria </option>
                             <option value="Afectada">❌ Cuarto Bloqueado / Infectado</option>
                         </select>
                     </div>
