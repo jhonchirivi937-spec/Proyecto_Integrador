@@ -1,3 +1,4 @@
+// Detecta automáticamente si se accede por localhost, 127.0.0.1 o la IP de red local (192.168.X.X)
 const API_URL = "http://127.0.0.1:5000/api";
 let chartProduccionInstance = null;
 let datosGlobalesGrafica = [];
