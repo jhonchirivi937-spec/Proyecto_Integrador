@@ -8,24 +8,29 @@
 </head>
 <body>
 
-    <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
     <header class="navbar">
-        <div class="navbar-brand">
-            <span>🐄</span> LactisValle PWA
+    <div class="navbar-brand">
+        <span>🐄</span> LactisValle PWA
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <!-- BOTÓN REGRESAR AL MENÚ PRINCIPAL -->
+        <a href="menu.html" class="btn btn-primary" style="text-decoration: none; padding: 10px 22px; font-size: 0.9rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+            🏠 Menú Principal
+        </a>
+
+        <!-- BADGE STATUS OFFLINE/ONLINE -->
+        <div class="status-badge badge-online" id="networkStatus" style="padding: 10px 20px; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;">
+            <span class="status-dot dot-online" id="networkDot"></span>
+            <span id="networkText">Modo Offline Listo</span>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <!-- BOTÓN PARA REGRESAR AL MENÚ PRINCIPAL -->
-            <a href="menu.html" class="btn btn-primary" style="text-decoration: none; padding: 6px 12px; font-size: 0.9rem;">
-                🏠 Menú Principal
-            </a>
-
-            <div class="status-badge badge-online" id="networkStatus">
-                <span class="status-dot dot-online" id="networkDot"></span>
-                <span id="networkText">Modo Offline Listo</span>
-            </div>
-        </div>
-    </header>
+        <!-- BOTÓN CERRAR SESIÓN -->
+        <button type="button" class="btn-logout-custom" onclick="cerrarSesion()" style="padding: 10px 22px; white-space: nowrap;">
+            🔒 Cerrar Sesión
+        </button>
+    </div>
+</header>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <main class="main-container">
@@ -113,10 +118,6 @@
                 <div>
                     <h2 class="card-title" style="margin:0;">Cola FIFO Local</h2>
                     <p class="card-subtitle" style="margin:0;">Registros retenidos localmente esperando conexión</p>
-                </div>
-                <button id="syncBtn" class="btn btn-primary" style="width: auto;" onclick="sincronizarColaMySQL()">
-                    🔄 Sincronizar con MySQL
-                </button>
             </div>
 
             <div class="table-responsive">

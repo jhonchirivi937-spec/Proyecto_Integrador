@@ -252,6 +252,7 @@ def obtener_reportes():
     except Exception as ex:
         print(f"Error general en Reportes: {ex}")
         return jsonify({'success': False, 'message': f'Error interno: {str(ex)}'}), 500
+    
     finally:
         if cursor: cursor.close()
         if conn and conn.is_connected(): conn.close()

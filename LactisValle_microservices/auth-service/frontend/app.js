@@ -18,18 +18,25 @@ document.addEventListener('DOMContentLoaded', () => {
         syncBtn.addEventListener('click', sincronizarColaMySQL);
     }
 
-    // Auto-sincronizar si al abrir la app ya se cuenta con conexión y hay datos retenidos
-    if (navigator.onLine && colaPesajes.length > 0) {
+    // Auto-sincronizar solo si hay conexión Y sesión iniciada
+    const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
+    if (navigator.onLine && colaPesajes.length > 0 && usuarioSesion) {
         sincronizarColaMySQL();
     }
 });
 
 // ==========================================
-// 1. SINCRONIZACIÓN AUTOMÁTICA AL VOLVER EL WIFI / ONLINE
+// 1. ESCUCHADOR DE RED CON VALIDACIÓN DE SESIÓN
 // ==========================================
 window.addEventListener('online', () => {
-    mostrarAlertaStatus('📶 Conexión Wi-Fi restablecida. Sincronizando datos con MySQL...', 'success');
+    const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
     
+    if (!usuarioSesion) {
+        mostrarAlertaStatus('🔒 Wi-Fi conectado. Inicia sesión para autorizar la sincronización con MySQL.', 'warning');
+        return;
+    }
+
+    mostrarAlertaStatus('📶 Conexión Wi-Fi restablecida. Sincronizando datos con MySQL...', 'success');
     if (colaPesajes && colaPesajes.length > 0) {
         sincronizarColaMySQL();
     }
@@ -40,10 +47,20 @@ window.addEventListener('offline', () => {
 });
 
 // ==========================================
-// 2. GUARDAR PESAJE LOCALMENTE EN LA COLA FIFO
+// 2. GUARDAR PESAJE LOCALMENTE EN LA COLA FIFO (CON BLOQUEO DE SESIÓN)
 // ==========================================
 function guardarPesajeLocalmente(e) {
     e.preventDefault();
+
+    // 🔒 BLOQUEO DE SEGURIDAD: Verificar sesión activa antes de registrar
+    const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
+    if (!usuarioSesion) {
+        mostrarAlertaStatus('🔒 Acceso denegado: Debes iniciar sesión para registrar pesajes.', 'danger');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
+        return;
+    }
 
     const bovinoInput = document.getElementById('bovinoInput').value.trim();
     const jornadaSelect = document.getElementById('jornadaSelect').value;
@@ -121,11 +138,11 @@ function guardarPesajeLocalmente(e) {
     actualizarTablaCola();
     actualizarIndicadoresKPI();
 
-    // Intentar sincronización automática si hay Internet
-    if (navigator.onLine) {
+    // Intentar sincronización automática si hay Internet Y Sesión
+    if (navigator.onLine && usuarioSesion) {
         sincronizarColaMySQL();
     } else {
-        mostrarAlertaStatus(`✅ Pesaje de "${bovinoInput}" retenido localmente. Se enviará al reconectar el Wi-Fi.`, 'warning');
+        mostrarAlertaStatus(`✅ Pesaje de "${bovinoInput}" retenido localmente. Se enviará al reconectar el Wi-Fi e iniciar sesión.`, 'warning');
     }
 }
 
@@ -186,9 +203,16 @@ function actualizarIndicadoresKPI() {
 }
 
 // ==========================================
-// 4. SINCRONIZAR COLA LOCAL CON MYSQL
+// 4. SINCRONIZAR COLA CON MYSQL (BLOQUEADO SIN SESIÓN)
 // ==========================================
 async function sincronizarColaMySQL() {
+    // 🔒 VERIFICACIÓN DE SESIÓN
+    const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
+    if (!usuarioSesion) {
+        mostrarAlertaStatus('🔒 Sincronización bloqueada: Debes iniciar sesión para transferir datos a MySQL.', 'danger');
+        return;
+    }
+
     if (colaPesajes.length === 0) {
         return;
     }
@@ -236,7 +260,7 @@ function mostrarAlertaStatus(mensaje, tipo) {
     if (!alertBox) return;
 
     alertBox.style.display = 'block';
-    
+
     if (tipo === 'success') {
         alertBox.style.backgroundColor = '#dcfce7';
         alertBox.style.color = '#15803d';
@@ -256,4 +280,14 @@ function mostrarAlertaStatus(mensaje, tipo) {
     setTimeout(() => {
         alertBox.style.display = 'none';
     }, 4000);
+}
+// ==========================================
+// FUNCIÓN PARA CERRAR SESIÓN DESDE EL DASHBOARD
+// ==========================================
+function cerrarSesion() {
+    // Elimina la marca de autenticación del navegador
+    sessionStorage.removeItem('usuario_autenticado');
+    
+    // Redirige al inicio de sesión
+    window.location.href = 'index.html';
 }

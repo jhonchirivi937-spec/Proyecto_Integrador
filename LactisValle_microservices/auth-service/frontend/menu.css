@@ -1,80 +1,151 @@
-/* --- ESTILOS EXCLUSIVOS PARA EL MENÚ PRINCIPAL --- */
-
-.menu-header {
-    text-align: center;
-    margin-bottom: 30px;
+/* ==========================================
+   ESTILOS GENERALES Y TEMAS OSCUROS
+   ========================================== */
+body {
+    background-color: #0f172a;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-.menu-header h1 {
-    color: #1a2332;
-    font-size: 2rem;
-    margin-bottom: 8px;
+/* ==========================================
+   ENCABEZADO / BARRA SUPERIOR (HEADER)
+   ========================================== */
+.header-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e293b;
+    padding: 12px 24px;
+    border-bottom: 1px solid #334155;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 }
 
-.menu-header p {
-    color: #555555;
-    font-size: 1rem;
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-/* Grilla responsiva alineada */
-.menu-grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 100px 0px;
+.brand-title {
+    color: #38bdf8;
+    font-weight: bold;
+    font-size: 1.1rem;
 }
 
-/* Tarjeta individual */
-.menu-card {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 30px 20px;
-    text-align: center;
+/* ==========================================
+   BOTONES DE NAVEGACIÓN Y ACCIONES
+   ========================================== */
+.btn-back {
+    background: #334155;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-back:hover {
+    background: #475569;
+    color: #38bdf8;
+}
+
+.btn-logout {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid #ef4444;
+    color: #fca5a5;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-logout:hover {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
+/* ==========================================
+   TARJETAS Y OPCIONES DEL MENÚ PRINCIPAL
+   ========================================== */
+.menu-options {
     display: flex;
     flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-menu {
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: #ffffff;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-menu:hover {
+    border-color: #38bdf8;
+    background: #1e293b;
+    transform: translateY(-2px);
+}
+
+.user-badge {
+    background: #334155;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #38bdf8;
+    display: inline-block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+/* ==========================================
+   BOTÓN CERRAR SESIÓN (TEMA ROJO / HOVER)
+   ========================================== */
+.btn-logout-custom {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid #ef4444 !important;
+    color: #fca5a5 !important;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-top: 25px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease-in-out !important;
 }
 
-.menu-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-    border-color: #2e7d32;
-}
-
-.card-icon {
-    font-size: 3.5rem;
-    margin-bottom: 15px;
-}
-
-.menu-card p {
-    color: #666666;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    margin: 0;
-}
-
-/* Colores de títulos por módulo */
-.card-title-green {
-    color: #1b5e20;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-}
-
-.card-title-blue {
-    color: #0d47a1;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-}
-
-.card-title-orange {
-    color: #e65100;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
+/* Efecto al pasar el cursor (Hover Rojo Vivo) */
+.btn-logout-custom:hover {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5) !important;
+    transform: translateY(-1px);
 }

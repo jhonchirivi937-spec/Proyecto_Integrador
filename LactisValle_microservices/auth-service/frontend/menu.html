@@ -4,55 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LactisValle — Menú Principal</title>
+    <!-- Hoja de estilos externa unificada -->
     <link rel="stylesheet" href="menu.css">
-    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body style="background-color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: sans-serif;">
 
-    <!-- BARRA SUPERIOR -->
-    <header class="navbar">
-        <div class="navbar-brand">
-            <span>🐄</span> LactisValle — Menú Principal
-        </div>
-        <button class="btn btn-primary" onclick="cerrarSesion()" style="width: auto; padding: 6px 12px;">
-            🚪 Cerrar Sesión
-        </button>
-    </header>
-
-    <!-- CONTENEDOR DE TARJETAS DE NAVEGACIÓN -->
-    <main class="main-container" style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+    <div class="login-card" style="background: #1e293b; padding: 30px; border-radius: 16px; width: 100%; max-width: 400px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
         
-        <h1 style="text-align: center; margin-bottom: 30px; color: #1e293b;">Panel Principal</h1>
+        <!-- Icono y Título Principal -->
+        <div style="font-size: 3rem; margin-bottom: 10px;">🐄</div>
+        <h1 style="color: #38bdf8; margin: 0 0 5px 0; font-size: 1.8rem;">LactisValle</h1>
+        <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px;">Panel de Control General</p>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-            
-            <!-- MÓDULO 1: REGISTRO DE PESAJE -->
-            <div class="card" style="text-align: center; padding: 30px; cursor: pointer;" onclick="location.href='dashboard.html'">
-                <div style="font-size: 3.5rem; margin-bottom: 15px;">📋</div>
-                <h2 class="card-title" style="margin-bottom: 10px;">Registrar mi Ganado / Pesaje</h2>
-                <p class="card-subtitle" style="margin-bottom: 20px;">Ingreso de volumen en potrero, cola FIFO local y alertas de desviación.</p>
-                <a href="dashboard.html" class="btn btn-success" style="text-decoration: none; display: inline-block;">Ingresar al Registro</a>
-            </div>
+        <!-- Etiqueta del Operario Logueado -->
+        <div id="userBadge" class="user-badge">👤 Operario: Cargando...</div>
 
-            <!-- MÓDULO 2: REPORTES Y ESTADÍSTICAS -->
-            <div class="card" style="text-align: center; padding: 30px; cursor: pointer;" onclick="location.href='reports.html'">
-                <div style="font-size: 3.5rem; margin-bottom: 15px;">📊</div>
-                <h2 class="card-title" style="margin-bottom: 10px;">Reportes & Estadísticas</h2>
-                <p class="card-subtitle" style="margin-bottom: 20px;">Consulta histórico de producción lechera y análisis comparativos.</p>
-                <a href="reports.html" class="btn btn-primary" style="text-decoration: none; display: inline-block;">Ver Reportes</a>
-            </div>
+        <!-- Opciones del Menú -->
+        <div class="menu-options">
+            <!-- Opción 1: Dashboard de Ordeño -->
+            <a href="dashboard.html" class="btn-menu">
+                <span style="font-size: 1.6rem;">📋</span>
+                <div style="text-align: left;">
+                    <div style="color: #ffffff; font-size: 1rem;">Dashboard de Ordeño</div>
+                    <small style="color: #94a3b8; font-weight: normal; font-size: 0.8rem;">Registro local de pesajes y cola FIFO</small>
+                </div>
+            </a>
 
-            <!-- MÓDULO 3: NOTIFICACIONES Y ALERTAS -->
-            <div class="card" style="text-align: center; padding: 30px;">
-                <div style="font-size: 3.5rem; margin-bottom: 15px;">🔔</div>
-                <h2 class="card-title" style="margin-bottom: 10px;">Notificaciones & Alertas</h2>
-                <p class="card-subtitle" style="margin-bottom: 20px;">Avisos de mastitis, estado de sincronización y eventos críticos del hato.</p>
-            </div>
+            <!-- Opción 2: Reportes y Estadísticas -->
+            <a href="reports.html" class="btn-menu">
+                <span style="font-size: 1.6rem;">📊</span>
+                <div style="text-align: left;">
+                    <div style="color: #ffffff; font-size: 1rem;">Reportes y Estadísticas</div>
+                    <small style="color: #94a3b8; font-weight: normal; font-size: 0.8rem;">Análisis visual de producción y alertas</small>
+                </div>
+            </a>
+      <button type="button" class="btn-logout-custom" onclick="cerrarSesion()">
+    🔒 Cerrar Sesión
+</button>
 
-        </div>
+    <script>
+        // GUARDIA DE SEGURIDAD EN EL MENÚ
+        document.addEventListener('DOMContentLoaded', () => {
+            const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
 
-    </main>
+            if (!usuarioSesion) {
+                alert('🔒 Acceso denegado: Debes iniciar sesión primero.');
+                window.location.href = 'index.html';
+                return;
+            }
 
-    <script src="menu.js"></script>
+            const datosUser = JSON.parse(usuarioSesion);
+            document.getElementById('userBadge').textContent = `👤 Operario: ${datosUser.usuario}`;
+        });
+
+        function cerrarSesion() {
+            sessionStorage.removeItem('usuario_autenticado');
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 </html>
