@@ -12,14 +12,41 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ordenoForm) {
         ordenoForm.addEventListener('submit', guardarPesajeLocalmente);
     }
+
+    const syncBtn = document.getElementById('syncBtn');
+    if (syncBtn) {
+        syncBtn.addEventListener('click', sincronizarColaMySQL);
+    }
+
+    // Auto-sincronizar si al abrir la app ya se cuenta con conexión y hay datos retenidos
+    if (navigator.onLine && colaPesajes.length > 0) {
+        sincronizarColaMySQL();
+    }
 });
 
-// 1. GUARDAR PESAJE LOCALMENTE EN LA COLA FIFO
+// ==========================================
+// 1. SINCRONIZACIÓN AUTOMÁTICA AL VOLVER EL WIFI / ONLINE
+// ==========================================
+window.addEventListener('online', () => {
+    mostrarAlertaStatus('📶 Conexión Wi-Fi restablecida. Sincronizando datos con MySQL...', 'success');
+    
+    if (colaPesajes && colaPesajes.length > 0) {
+        sincronizarColaMySQL();
+    }
+});
+
+window.addEventListener('offline', () => {
+    mostrarAlertaStatus('🔌 Sin conexión a Internet. Los registros se guardarán localmente en la cola FIFO.', 'warning');
+});
+
+// ==========================================
+// 2. GUARDAR PESAJE LOCALMENTE EN LA COLA FIFO
+// ==========================================
 function guardarPesajeLocalmente(e) {
     e.preventDefault();
 
     const bovinoInput = document.getElementById('bovinoInput').value.trim();
-    const jornadaSelect = document.getElementById('jornadaSelect').value; // 'Mañana' o 'Tarde'
+    const jornadaSelect = document.getElementById('jornadaSelect').value;
     const litrosInput = parseFloat(document.getElementById('litrosInput').value);
     const condicionCorporal = parseFloat(document.getElementById('condicionCorporal').value) || 3.0;
     const estadoSanitario = document.getElementById('estadoUbre').value;
@@ -30,7 +57,7 @@ function guardarPesajeLocalmente(e) {
         return;
     }
 
-    // A. Filtrar historial previo del bovino ESPECÍFICAMENTE PARA LA MISMA JORNADA (Mañana vs Mañana / Tarde vs Tarde)
+    // Comparación por misma jornada (Mañana vs Mañana / Tarde vs Tarde)
     let pesajesPreviosJornada = colaPesajes.filter(p => 
         p.bovino.toLowerCase() === bovinoInput.toLowerCase() && 
         p.jornadaPura === jornadaSelect
@@ -40,7 +67,6 @@ function guardarPesajeLocalmente(e) {
     let deltaP = 0.0;
 
     if (pesajesPreviosJornada.length > 0) {
-        // Calcular promedio solo de los ordeños de esa misma jornada
         let sumaLitros = pesajesPreviosJornada.reduce((acc, p) => acc + parseFloat(p.litros), 0);
         promedioReferencia = sumaLitros / pesajesPreviosJornada.length;
 
@@ -48,12 +74,10 @@ function guardarPesajeLocalmente(e) {
             deltaP = Math.abs((litrosInput - promedioReferencia) / promedioReferencia) * 100;
         }
     } else {
-        // PRIMER REGISTRO DE ESTA JORNADA: La base de referencia es el mismo pesaje
         promedioReferencia = litrosInput;
-        deltaP = 0.0; // 0% de desviación inicial
+        deltaP = 0.0;
     }
 
-    // B. EVALUACIÓN FLEXIBLE DEL ESTADO SANITARIO
     const estadoLwr = estadoSanitario.toLowerCase();
     let esSanitarioSano = estadoLwr.includes('sana') || 
                           estadoLwr.includes('sano') || 
@@ -63,23 +87,19 @@ function guardarPesajeLocalmente(e) {
     let esAlerta = false;
 
     if (!esSanitarioSano) {
-        // Si no está sano clínicamente, activa alerta inmediata
         esAlerta = true;
     } else if (pesajesPreviosJornada.length > 0 && deltaP >= 15.0) {
-        // Si está sano pero su producción cayó >= 15% comparado con su misma jornada previa
         esAlerta = true;
     }
 
-    // ASIGNACIÓN ESTRICTA Y CORRECTA DEL TEXTO
     let estadoRegla = esAlerta ? 'Alerta Sanitaria / ΔP' : 'Normal';
 
-    // C. Construir el objeto para la cola FIFO
     const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const nuevoRegistro = {
         id: Date.now(),
         bovino: bovinoInput,
         jornada: `${jornadaSelect} (${horaActual})`,
-        jornadaPura: jornadaSelect, // 'Mañana' o 'Tarde' para comparaciones puras
+        jornadaPura: jornadaSelect,
         litros: litrosInput.toFixed(1),
         cc: condicionCorporal.toFixed(1),
         sanidad: estadoSanitario,
@@ -91,11 +111,9 @@ function guardarPesajeLocalmente(e) {
         fechaLocal: new Date().toISOString()
     };
 
-    // D. Insertar en la cola FIFO y guardar en localStorage
     colaPesajes.push(nuevoRegistro);
     localStorage.setItem('cola_pesajes', JSON.stringify(colaPesajes));
 
-    // E. Limpiar formulario y refrescar interfaz
     document.getElementById('bovinoInput').value = '';
     document.getElementById('litrosInput').value = '';
     document.getElementById('observacionesInput').value = '';
@@ -103,10 +121,17 @@ function guardarPesajeLocalmente(e) {
     actualizarTablaCola();
     actualizarIndicadoresKPI();
 
-    mostrarAlertaStatus(`✅ Pesaje de "${bovinoInput}" registrado con éxito en la jornada ${jornadaSelect}.`, 'success');
+    // Intentar sincronización automática si hay Internet
+    if (navigator.onLine) {
+        sincronizarColaMySQL();
+    } else {
+        mostrarAlertaStatus(`✅ Pesaje de "${bovinoInput}" retenido localmente. Se enviará al reconectar el Wi-Fi.`, 'warning');
+    }
 }
 
-// 2. RENDERIZAR TABLA DE LA COLA FIFO
+// ==========================================
+// 3. RENDERIZAR TABLA DE LA COLA FIFO
+// ==========================================
 function actualizarTablaCola() {
     const tbody = document.getElementById('tablaCola');
     if (!tbody) return;
@@ -127,7 +152,6 @@ function actualizarTablaCola() {
     colaPesajes.forEach(reg => {
         const tr = document.createElement('tr');
 
-        // Píldora de color y texto dinámicos según el valor booleano esAlerta
         const badgeStyle = reg.esAlerta 
             ? 'background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;'
             : 'background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;';
@@ -154,7 +178,6 @@ function actualizarTablaCola() {
     });
 }
 
-// 3. ACTUALIZAR TARJETAS KPI
 function actualizarIndicadoresKPI() {
     const kpiQueueCount = document.getElementById('kpiQueueCount');
     if (kpiQueueCount) {
@@ -162,10 +185,11 @@ function actualizarIndicadoresKPI() {
     }
 }
 
-// 4. SINCRONIZAR COLA LOCAL CON MYSQL (BACKEND FLASK)
+// ==========================================
+// 4. SINCRONIZAR COLA LOCAL CON MYSQL
+// ==========================================
 async function sincronizarColaMySQL() {
     if (colaPesajes.length === 0) {
-        mostrarAlertaStatus('⚠️ La cola local está vacía. No hay registros para sincronizar.', 'warning');
         return;
     }
 
@@ -187,7 +211,6 @@ async function sincronizarColaMySQL() {
         if (response.ok && data.success) {
             mostrarAlertaStatus(`✅ ${data.message}`, 'success');
 
-            // Vaciar la cola FIFO local tras la sincronización exitosa
             colaPesajes = [];
             localStorage.removeItem('cola_pesajes');
 
@@ -199,7 +222,7 @@ async function sincronizarColaMySQL() {
 
     } catch (error) {
         console.error('Error de red al sincronizar:', error);
-        mostrarAlertaStatus('🔌 No se pudo conectar con el servidor Flask. Los datos permanecen seguros localmente.', 'danger');
+        mostrarAlertaStatus('🔌 Servidor inalcanzable. Los datos permanecen seguros en la cola local.', 'danger');
     } finally {
         if (syncBtn) {
             syncBtn.disabled = false;
@@ -208,7 +231,6 @@ async function sincronizarColaMySQL() {
     }
 }
 
-// 5. CAJA DE MENSAJES Y NOTIFICACIONES
 function mostrarAlertaStatus(mensaje, tipo) {
     const alertBox = document.getElementById('statusAlert');
     if (!alertBox) return;

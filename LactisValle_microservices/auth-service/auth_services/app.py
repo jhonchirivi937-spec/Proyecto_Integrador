@@ -9,7 +9,7 @@ CORS(app)  # Habilitar CORS para peticiones desde Live Server / PWA
 DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',
-    'password': '23977031Maikh',  # Ajusta tu clave de MySQL si aplica
+    'password': '23977031Maikh',  # Tu contraseña de MySQL conservada
     'database': 'lactisvalle_db'
 }
 
@@ -212,7 +212,7 @@ def obtener_reportes():
         row_promedio = cursor.fetchone()
         promedio_general = float(row_promedio['promedio_general']) if row_promedio and row_promedio['promedio_general'] else 0.0
 
-        # 2. Registros detallados por bovino para construir la gráfica individual
+        # 2. Registros detallados por bovino
         query_grafica = """
             SELECT 
                 id_bovino as bovino,
@@ -255,6 +255,7 @@ def obtener_reportes():
     finally:
         if cursor: cursor.close()
         if conn and conn.is_connected(): conn.close()
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
