@@ -1,0 +1,32 @@
+[33m140beaf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: commit: Init
+[33mfd9f39b[m HEAD@{1}: commit: Servidor funcional y verifica inicio de sesión.
+[33m6709a75[m HEAD@{2}: commit: Actualización de el menu.html & adición de un nuevo boton de cerrar sesión en menu y dashboard
+[33m752c35e[m HEAD@{3}: commit: Sincronización del servidor cuando se conecta a Internet completamente
+[33m97ba4f6[m HEAD@{4}: commit: Cambios en los nombres de las opciones del dashboard, cambios en reportes para graficas de cada animal
+[33me1f77be[m HEAD@{5}: pull origin main: Fast-forward
+[33m6ec5318[m HEAD@{6}: commit: Se agrega una nueva función de el menu llamado reportes para visualización mediante las graficas
+[33m19c915d[m HEAD@{7}: commit: Eliminación de tablas innecesarias
+[33m8ce6b59[m HEAD@{8}: commit: Guardado en Cola FIFO & sincronización con la base de datos en MYSQL
+[33mb1eac3f[m HEAD@{9}: commit: Remodelación y limpieza de la base de datos
+[33m1a198c9[m HEAD@{10}: commit: Remodelación de la interfaz y adicionamiento de nuevas funciones a registrar
+[33ma0ae246[m HEAD@{11}: commit: Adicionamiento de un menu y conexión entre Inicio de Sesión, Menu e Interfaz
+[33m7fa58e2[m HEAD@{12}: commit: Implementación de icono de cerrar sesión y retorno al inicio de sesión principal
+[33m7acd102[m HEAD@{13}: commit: Implementaciòn de endpoints de registro y login conectados a Mysql
+[33mfc1bd4e[m HEAD@{14}: commit: configuración inicial de microservicio Flask
+[33mffaddf4[m HEAD@{15}: commit: Implementación de microservicios y organización de el tablero
+[33m00f05fb[m HEAD@{16}: commit: Cambio de colores de el inicio de sesión
+[33mc7641df[m HEAD@{17}: commit: Cambio de colores de el inicio de sesión
+[33md918c16[m HEAD@{18}: commit: Comprobación de union de los codigos HTML, CSS y JAVA en el inicio de sesión
+[33me964757[m HEAD@{19}: commit: Integración de Css del inicio de sesión
+[33m6de4ed3[m HEAD@{20}: commit: Inicio de sesión integrado con Javascript
+[33m96f1477[m HEAD@{21}: commit: Asignación de el index del inicio de sesión
+[33m5b712a3[m HEAD@{22}: commit: Cambio de nombre de index.html a Dashboard.html
+[33m872cd13[m HEAD@{23}: commit: Conexión de el html a los estilos del CSS
+[33m1f06c91[m HEAD@{24}: commit: Cambio de nombre del index(3) a index unicamente
+[33me1763a0[m HEAD@{25}: commit: Orden del index y finalizacion del css
+[33m33ca66e[m HEAD@{26}: commit: Limpieza: Remover archivos duplicados y dejar la estructura limpia
+[33mf7e47f2[m HEAD@{27}: pull origin main --rebase (finish): returning to refs/heads/main
+[33mf7e47f2[m HEAD@{28}: pull origin main --rebase (pick): Separando Styles Css para organizar el codigo index
+[33m3af17d2[m HEAD@{29}: pull origin main --rebase (start): checkout 3af17d2dd4100a09152cb4ca420fd68c51dff267
+[33m072410c[m HEAD@{30}: Branch: renamed refs/heads/master to refs/heads/main
+[33m072410c[m HEAD@{32}: commit (initial): Separando Styles Css para organizar el codigo index

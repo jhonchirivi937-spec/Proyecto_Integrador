@@ -1,279 +1,129 @@
-
-const API_URL = "http://127.0.0.1:5000/api";
-
-let colaPesajes = JSON.parse(localStorage.getItem('cola_pesajes')) || [];
+// ==========================================
+// LACTISVALLE - CLIENTE PWA (Offline-First)
+// ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    actualizarTablaCola();
-    actualizarIndicadoresKPI();
+    const formPesaje = document.getElementById('form-pesaje') || document.querySelector('form');
+    const statusNetwork = document.getElementById('status-network');
 
-    const ordenoForm = document.getElementById('ordenoForm');
-    if (ordenoForm) {
-        ordenoForm.addEventListener('submit', guardarPesajeLocalmente);
-    }
+    // Detección de conectividad
+    window.addEventListener('online', actualizarEstadoRed);
+    window.addEventListener('offline', actualizarEstadoRed);
+    actualizarEstadoRed();
 
-    const syncBtn = document.getElementById('syncBtn');
-    if (syncBtn) {
-        syncBtn.addEventListener('click', sincronizarColaMySQL);
-    }
-
-
-    const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
-    if (navigator.onLine && colaPesajes.length > 0 && usuarioSesion) {
-        sincronizarColaMySQL();
+    if (formPesaje) {
+        formPesaje.addEventListener('submit', guardarPesajeLocal);
     }
 });
 
-
-window.addEventListener('online', () => {
-    const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
+function actualizarEstadoRed() {
+    const online = navigator.onLine;
+    console.log(`[Red] Estado actual: ${online ? 'ONLINE' : 'OFFLINE'}`);
     
-    if (!usuarioSesion) {
-        mostrarAlertaStatus('🔒 Wi-Fi conectado. Inicia sesión para autorizar la sincronización con MySQL.', 'warning');
+    if (online) {
+        sincronizarColaLocal(); // Intentar enviar datos pendientes al recuperar red
+    }
+}
+
+// ------------------------------------------
+// Captura y Guardado Local en Cola FIFO
+// ------------------------------------------
+function guardarPesajeLocal(e) {
+    e.preventDefault(); // Evita la recarga de la página
+
+    // Lectura de inputs del formulario
+    const bovino = document.getElementById('bovino') ? document.getElementById('bovino').value.trim() : 'Mariana';
+    const jornada = document.getElementById('jornada') ? document.getElementById('jornada').value : 'Mañana';
+    const litros = parseFloat(document.getElementById('litros') ? document.getElementById('litros').value : 0);
+    const condicion = document.getElementById('condicion') ? document.getElementById('condicion').value : '3.0';
+    const novedad = document.getElementById('novedad') ? document.getElementById('novedad').value : 'Sin novedad';
+    const observaciones = document.getElementById('observaciones') ? document.getElementById('observaciones').value : '';
+
+    if (!bovino || isNaN(litros) || litros <= 0) {
+        alert('⚠️ Por favor ingrese un bovino válido y un volumen de litros mayor a 0.');
         return;
     }
 
-    mostrarAlertaStatus('📶 Conexión Wi-Fi restablecida. Sincronizando datos con MySQL...', 'success');
-    if (colaPesajes && colaPesajes.length > 0) {
-        sincronizarColaMySQL();
-    }
-});
+    // Evaluación del Motor de Alertas (Delta P >= 15%)
+    // Histórico de referencia para el bovino (Ejemplo: promedio histórico de Mariana = 15L)
+    const promedioHistorico = 15.0; 
+    let alertaActivada = false;
+    let variacionPorcentual = 0;
 
-window.addEventListener('offline', () => {
-    mostrarAlertaStatus('🔌 Sin conexión a Internet. Los registros se guardarán localmente en la cola FIFO.', 'warning');
-});
-
-
-function guardarPesajeLocalmente(e) {
-    e.preventDefault();
-r
-    const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
-    if (!usuarioSesion) {
-        mostrarAlertaStatus('🔒 Acceso denegado: Debes iniciar sesión para registrar pesajes.', 'danger');
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
-        return;
-    }
-
-    const bovinoInput = document.getElementById('bovinoInput').value.trim();
-    const jornadaSelect = document.getElementById('jornadaSelect').value;
-    const litrosInput = parseFloat(document.getElementById('litrosInput').value);
-    const condicionCorporal = parseFloat(document.getElementById('condicionCorporal').value) || 3.0;
-    const estadoSanitario = document.getElementById('estadoUbre').value;
-    const observacionesInput = document.getElementById('observacionesInput').value.trim() || 'Sin novedad';
-
-    if (!bovinoInput || isNaN(litrosInput)) {
-        mostrarAlertaStatus('⚠️ Ingrese un código/nombre de bovino y un pesaje válido.', 'danger');
-        return;
-    }
-
-    let pesajesPreviosJornada = colaPesajes.filter(p => 
-        p.bovino.toLowerCase() === bovinoInput.toLowerCase() && 
-        p.jornadaPura === jornadaSelect
-    );
-
-    let promedioReferencia = 0.0;
-    let deltaP = 0.0;
-
-    if (pesajesPreviosJornada.length > 0) {
-        let sumaLitros = pesajesPreviosJornada.reduce((acc, p) => acc + parseFloat(p.litros), 0);
-        promedioReferencia = sumaLitros / pesajesPreviosJornada.length;
-
-        if (promedioReferencia > 0) {
-            deltaP = Math.abs((litrosInput - promedioReferencia) / promedioReferencia) * 100;
+    if (promedioHistorico > 0) {
+        variacionPorcentual = ((promedioHistorico - litros) / promedioHistorico) * 100;
+        if (variacionPorcentual >= 15.0) {
+            alertaActivada = true;
         }
-    } else {
-        promedioReferencia = litrosInput;
-        deltaP = 0.0;
     }
 
-    const estadoLwr = estadoSanitario.toLowerCase();
-    let esSanitarioSano = estadoLwr.includes('sana') || 
-                          estadoLwr.includes('sano') || 
-                          estadoLwr.includes('normal') || 
-                          estadoLwr.includes('sin novedad');
-
-    let esAlerta = false;
-
-    if (!esSanitarioSano) {
-        esAlerta = true;
-    } else if (pesajesPreviosJornada.length > 0 && deltaP >= 15.0) {
-        esAlerta = true;
-    }
-
-    let estadoRegla = esAlerta ? 'Alerta Sanitaria / ΔP' : 'Normal';
-
-    const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // Construcción del objeto de registro
     const nuevoRegistro = {
-        id: Date.now(),
-        bovino: bovinoInput,
-        jornada: `${jornadaSelect} (${horaActual})`,
-        jornadaPura: jornadaSelect,
-        litros: litrosInput.toFixed(1),
-        cc: condicionCorporal.toFixed(1),
-        sanidad: estadoSanitario,
-        obs: observacionesInput,
-        promedioRef: promedioReferencia.toFixed(2),
-        deltaP: deltaP.toFixed(2),
-        esAlerta: esAlerta,
-        estadoRegla: estadoRegla,
-        fechaLocal: new Date().toISOString()
+        id_local: Date.now(),
+        bovino_id: bovino,
+        jornada: jornada,
+        litros: litros,
+        condicion_corporal: condicion,
+        novedad: novedad,
+        observaciones: observaciones,
+        alerta_caida: alertaActivada ? 1 : 0,
+        fecha_registro: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        sincronizado: 0
     };
 
-    colaPesajes.push(nuevoRegistro);
-    localStorage.setItem('cola_pesajes', JSON.stringify(colaPesajes));
+    // Lectura de la cola FIFO actual en localStorage
+    let colaFifo = JSON.parse(localStorage.getItem('cola_pesajes')) || [];
+    
+    // Inserción al final de la cola (FIFO)
+    colaFifo.push(nuevoRegistro);
+    localStorage.setItem('cola_pesajes', JSON.stringify(colaFifo));
 
-    document.getElementById('bovinoInput').value = '';
-    document.getElementById('litrosInput').value = '';
-    document.getElementById('observacionesInput').value = '';
-
-    actualizarTablaCola();
-    actualizarIndicadoresKPI();
-
-    // Intentar sincronización automática si hay Internet Y Sesión
-    if (navigator.onLine && usuarioSesion) {
-        sincronizarColaMySQL();
+    // Feedback al usuario
+    if (alertaActivada) {
+        alert(`⚠️ ALERTA DE PRODUCCIÓN ACTIVADA ⚠️\n\nEl bovino ${bovino} presentó una caída de rendimiento del ${variacionPorcentual.toFixed(1)}% (Litros: ${litros}L vs Promedio: ${promedioHistorico}L).\n\nRegistro guardado localmente en Cola FIFO.`);
     } else {
-        mostrarAlertaStatus(`✅ Pesaje de "${bovinoInput}" retenido localmente. Se enviará al reconectar el Wi-Fi e iniciar sesión.`, 'warning');
+        alert(`✅ Pesaje de ${litros}L guardado exitosamente en la memoria local (Cola FIFO).`);
+    }
+
+    // Limpiar formulario
+    e.target.reset();
+
+    // Intentar sincronización si hay red
+    if (navigator.onLine) {
+        sincronizarColaLocal();
     }
 }
 
-function actualizarTablaCola() {
-    const tbody = document.getElementById('tablaCola');
-    if (!tbody) return;
+// ------------------------------------------
+// Sincronización Diferida Asincrónica
+// ------------------------------------------
+async function sincronizarColaLocal() {
+    let colaFifo = JSON.parse(localStorage.getItem('cola_pesajes')) || [];
 
-    tbody.innerHTML = '';
+    if (colaFifo.length === 0) return;
 
-    if (colaPesajes.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" style="text-align: center; color: #64748b; padding: 20px;">
-                    No hay registros pendientes en la cola local.
-                </td>
-            </tr>
-        `;
-        return;
-    }
-
-    colaPesajes.forEach(reg => {
-        const tr = document.createElement('tr');
-
-        const badgeStyle = reg.esAlerta 
-            ? 'background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;'
-            : 'background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;';
-
-        const textoEstado = reg.esAlerta ? 'Alerta Sanitaria / ΔP' : 'Normal';
-
-        tr.innerHTML = `
-            <td>
-                <strong>${reg.bovino}</strong><br>
-                <small style="color: #64748b;">${reg.jornada}</small>
-            </td>
-            <td><strong>${reg.litros} L</strong></td>
-            <td>${reg.cc}</td>
-            <td>${reg.sanidad}</td>
-            <td>${reg.obs}</td>
-            <td>
-                <span style="${badgeStyle}">
-                    ${textoEstado}
-                </span>
-            </td>
-        `;
-
-        tbody.appendChild(tr);
-    });
-}
-
-function actualizarIndicadoresKPI() {
-    const kpiQueueCount = document.getElementById('kpiQueueCount');
-    if (kpiQueueCount) {
-        kpiQueueCount.textContent = `${colaPesajes.length} Pendientes`;
-    }
-}
-
-
-async function sincronizarColaMySQL() {
-    // 🔒 VERIFICACIÓN DE SESIÓN
-    const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
-    if (!usuarioSesion) {
-        mostrarAlertaStatus('🔒 Sincronización bloqueada: Debes iniciar sesión para transferir datos a MySQL.', 'danger');
-        return;
-    }
-
-    if (colaPesajes.length === 0) {
-        return;
-    }
-
-    const syncBtn = document.getElementById('syncBtn');
-    if (syncBtn) {
-        syncBtn.disabled = true;
-        syncBtn.textContent = '⏳ Sincronizando...';
-    }
+    console.log(`[Sync] Enviando ${colaFifo.length} registros pendientes al servidor...`);
 
     try {
-        const response = await fetch(`${API_URL}/sincronizar_pesajes`, {
+        const respuesta = await fetch('http://127.0.0.1:5000/api/sincronizar_pesajes', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ registros: colaPesajes })
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ registros: colaFifo })
         });
 
-        const data = await response.json();
+        const resultado = await respuesta.json();
 
-        if (response.ok && data.success) {
-            mostrarAlertaStatus(`✅ ${data.message}`, 'success');
-
-            colaPesajes = [];
+        if (respuesta.ok && resultado.status === 'success') {
+            console.log('✅ Sincronización exitosa con MySQL.');
+            // Vaciar la cola local tras confirmar persistencia en BD
             localStorage.removeItem('cola_pesajes');
-
-            actualizarTablaCola();
-            actualizarIndicadoresKPI();
+            alert('🔄 Conexión restablecida: Todos los registros guardados en potrero fueron sincronizados con la base de datos central.');
         } else {
-            mostrarAlertaStatus(`⚠️ Error al sincronizar: ${data.message || 'Error desconocido.'}`, 'danger');
+            console.warn('⚠️ El servidor no pudo procesar los registros:', resultado);
         }
-
     } catch (error) {
-        console.error('Error de red al sincronizar:', error);
-        mostrarAlertaStatus('🔌 Servidor inalcanzable. Los datos permanecen seguros en la cola local.', 'danger');
-    } finally {
-        if (syncBtn) {
-            syncBtn.disabled = false;
-            syncBtn.textContent = '🔄 Sincronizar con MySQL';
-        }
+        console.error('❌ Error de red durante la sincronización:', error);
     }
-}
-
-function mostrarAlertaStatus(mensaje, tipo) {
-    const alertBox = document.getElementById('statusAlert');
-    if (!alertBox) return;
-
-    alertBox.style.display = 'block';
-
-    if (tipo === 'success') {
-        alertBox.style.backgroundColor = '#dcfce7';
-        alertBox.style.color = '#15803d';
-        alertBox.style.border = '1px solid #86efac';
-    } else if (tipo === 'danger') {
-        alertBox.style.backgroundColor = '#fee2e2';
-        alertBox.style.color = '#b91c1c';
-        alertBox.style.border = '1px solid #fca5a5';
-    } else {
-        alertBox.style.backgroundColor = '#fef3c7';
-        alertBox.style.color = '#b45309';
-        alertBox.style.border = '1px solid #fde68a';
-    }
-
-    alertBox.textContent = mensaje;
-
-    setTimeout(() => {
-        alertBox.style.display = 'none';
-    }, 4000);
-}
-
-function cerrarSesion() {
-    // Elimina la marca de autenticación del navegador
-    sessionStorage.removeItem('usuario_autenticado');
-    
-    // Redirige al inicio de sesión
-    window.location.href = 'index.html';
 }
