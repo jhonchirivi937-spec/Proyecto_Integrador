@@ -12,10 +12,6 @@ DB_CONFIG = {
     'password': '23977031Maikh',  # Ajusta tu clave de MySQL si aplica
     'database': 'lactisvalle_db'
 }
-
-# ==========================================
-# 1. ENDPOINT DE REGISTRO DE USUARIOS
-# ==========================================
 @app.route('/api/register', methods=['POST', 'OPTIONS'])
 def register():
     if request.method == 'OPTIONS':
@@ -51,11 +47,6 @@ def register():
     finally:
         if cursor: cursor.close()
         if conn and conn.is_connected(): conn.close()
-
-
-# ==========================================
-# 2. ENDPOINT DE AUTENTICACIÓN (LOGIN)
-# ==========================================
 @app.route('/api/login', methods=['POST', 'OPTIONS'])
 def login():
     if request.method == 'OPTIONS':
@@ -91,11 +82,6 @@ def login():
     finally:
         if cursor: cursor.close()
         if conn and conn.is_connected(): conn.close()
-
-
-# ==========================================
-# 3. ENDPOINT DE SINCRONIZACIÓN DE PESAJE
-# ==========================================
 @app.route('/api/sincronizar_pesajes', methods=['POST', 'OPTIONS'])
 def sincronizar_pesajes():
     if request.method == 'OPTIONS':
@@ -183,11 +169,6 @@ def sincronizar_pesajes():
     finally:
         if cursor: cursor.close()
         if conn and conn.is_connected(): conn.close()
-
-
-# ==========================================
-# 4. ENDPOINT PARA REPORTES Y GRÁFICAS POR BOVINO
-# ==========================================
 @app.route('/api/obtener_reportes', methods=['GET', 'OPTIONS'])
 def obtener_reportes():
     if request.method == 'OPTIONS':

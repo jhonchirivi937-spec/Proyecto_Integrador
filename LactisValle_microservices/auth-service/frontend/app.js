@@ -1,7 +1,6 @@
-// URL Base del servidor Flask
+
 const API_URL = "http://127.0.0.1:5000/api";
 
-// Cargar la cola desde localStorage al iniciar la página
 let colaPesajes = JSON.parse(localStorage.getItem('cola_pesajes')) || [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,16 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
         syncBtn.addEventListener('click', sincronizarColaMySQL);
     }
 
-    // Auto-sincronizar solo si hay conexión Y sesión iniciada
+
     const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
     if (navigator.onLine && colaPesajes.length > 0 && usuarioSesion) {
         sincronizarColaMySQL();
     }
 });
 
-// ==========================================
-// 1. ESCUCHADOR DE RED CON VALIDACIÓN DE SESIÓN
-// ==========================================
+
 window.addEventListener('online', () => {
     const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
     
@@ -46,13 +43,10 @@ window.addEventListener('offline', () => {
     mostrarAlertaStatus('🔌 Sin conexión a Internet. Los registros se guardarán localmente en la cola FIFO.', 'warning');
 });
 
-// ==========================================
-// 2. GUARDAR PESAJE LOCALMENTE EN LA COLA FIFO (CON BLOQUEO DE SESIÓN)
-// ==========================================
+
 function guardarPesajeLocalmente(e) {
     e.preventDefault();
-
-    // 🔒 BLOQUEO DE SEGURIDAD: Verificar sesión activa antes de registrar
+r
     const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
     if (!usuarioSesion) {
         mostrarAlertaStatus('🔒 Acceso denegado: Debes iniciar sesión para registrar pesajes.', 'danger');
@@ -74,7 +68,6 @@ function guardarPesajeLocalmente(e) {
         return;
     }
 
-    // Comparación por misma jornada (Mañana vs Mañana / Tarde vs Tarde)
     let pesajesPreviosJornada = colaPesajes.filter(p => 
         p.bovino.toLowerCase() === bovinoInput.toLowerCase() && 
         p.jornadaPura === jornadaSelect
@@ -146,9 +139,6 @@ function guardarPesajeLocalmente(e) {
     }
 }
 
-// ==========================================
-// 3. RENDERIZAR TABLA DE LA COLA FIFO
-// ==========================================
 function actualizarTablaCola() {
     const tbody = document.getElementById('tablaCola');
     if (!tbody) return;
@@ -202,9 +192,7 @@ function actualizarIndicadoresKPI() {
     }
 }
 
-// ==========================================
-// 4. SINCRONIZAR COLA CON MYSQL (BLOQUEADO SIN SESIÓN)
-// ==========================================
+
 async function sincronizarColaMySQL() {
     // 🔒 VERIFICACIÓN DE SESIÓN
     const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
@@ -281,9 +269,7 @@ function mostrarAlertaStatus(mensaje, tipo) {
         alertBox.style.display = 'none';
     }, 4000);
 }
-// ==========================================
-// FUNCIÓN PARA CERRAR SESIÓN DESDE EL DASHBOARD
-// ==========================================
+
 function cerrarSesion() {
     // Elimina la marca de autenticación del navegador
     sessionStorage.removeItem('usuario_autenticado');

@@ -9,9 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ==========================================
-// 1. CONMUTADOR ENTRE ACCESO Y REGISTRO
-// ==========================================
 function toggleModoRegistro() {
     esModoRegistro = !esModoRegistro;
 
@@ -36,9 +33,6 @@ function toggleModoRegistro() {
     }
 }
 
-// ==========================================
-// 2. PROCESAMIENTO DE LOGIN Y REGISTRO
-// ==========================================
 async function procesarFormularioAuth(e) {
     e.preventDefault(); // Detener recarga de página por defecto
 
@@ -97,9 +91,7 @@ async function procesarFormularioAuth(e) {
     }
 }
 
-// ==========================================
-// 3. DESCARGAR BASE DE DATOS LOCAL (JSON)
-// ==========================================
+
 function descargarBaseDatosJSON() {
     const cola = localStorage.getItem('cola_pesajes') || '[]';
     const blob = new Blob([cola], { type: 'application/json' });
@@ -111,9 +103,7 @@ function descargarBaseDatosJSON() {
     URL.revokeObjectURL(url);
 }
 
-// ==========================================
-// 4. MOSTRAR ALERTAS DINÁMICAS
-// ==========================================
+
 function mostrarAlertaLogin(mensaje, tipo) {
     const alertBox = document.getElementById('loginAlert');
     if (!alertBox) return;

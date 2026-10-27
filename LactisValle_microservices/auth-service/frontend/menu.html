@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LactisValle — Menú Principal</title>
-    <!-- Hoja de estilos externa unificada -->
     <link rel="stylesheet" href="menu.css">
 </head>
 <body style="background-color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: sans-serif;">
@@ -16,12 +15,11 @@
         <h1 style="color: #38bdf8; margin: 0 0 5px 0; font-size: 1.8rem;">LactisValle</h1>
         <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px;">Panel de Control General</p>
 
-        <!-- Etiqueta del Operario Logueado -->
         <div id="userBadge" class="user-badge">👤 Operario: Cargando...</div>
 
-        <!-- Opciones del Menú -->
+
         <div class="menu-options">
-            <!-- Opción 1: Dashboard de Ordeño -->
+
             <a href="dashboard.html" class="btn-menu">
                 <span style="font-size: 1.6rem;">📋</span>
                 <div style="text-align: left;">
@@ -30,7 +28,6 @@
                 </div>
             </a>
 
-            <!-- Opción 2: Reportes y Estadísticas -->
             <a href="reports.html" class="btn-menu">
                 <span style="font-size: 1.6rem;">📊</span>
                 <div style="text-align: left;">
@@ -43,7 +40,6 @@
 </button>
 
     <script>
-        // GUARDIA DE SEGURIDAD EN EL MENÚ
         document.addEventListener('DOMContentLoaded', () => {
             const usuarioSesion = sessionStorage.getItem('usuario_autenticado');
 

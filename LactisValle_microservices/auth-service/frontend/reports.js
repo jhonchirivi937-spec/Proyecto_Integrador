@@ -1,16 +1,15 @@
-// Detecta automáticamente si se accede por localhost, 127.0.0.1 o la IP de red local (192.168.X.X)
+
 const API_URL = "http://127.0.0.1:5000/api";
 let chartProduccionInstance = null;
 let datosGlobalesGrafica = [];
 
-// Paleta de colores vibrantes para identificar cada bovino
 const PALETA_COLORES = [
-    { border: '#2563eb', bg: 'rgba(37, 99, 235, 0.25)' },   // Azul
-    { border: '#16a34a', bg: 'rgba(22, 163, 74, 0.25)' },   // Verde
-    { border: '#e11d48', bg: 'rgba(225, 29, 72, 0.25)' },   // Rojo / Rosa
-    { border: '#d97706', bg: 'rgba(217, 119, 6, 0.25)' },   // Naranja
-    { border: '#9333ea', bg: 'rgba(147, 51, 234, 0.25)' },  // Morado
-    { border: '#0891b2', bg: 'rgba(8, 145, 178, 0.25)' }    // Cyan
+    { border: '#2563eb', bg: 'rgba(37, 99, 235, 0.25)' },   
+    { border: '#16a34a', bg: 'rgba(22, 163, 74, 0.25)' },   
+    { border: '#e11d48', bg: 'rgba(225, 29, 72, 0.25)' },   
+    { border: '#d97706', bg: 'rgba(217, 119, 6, 0.25)' },   
+    { border: '#9333ea', bg: 'rgba(147, 51, 234, 0.25)' },  
+    { border: '#0891b2', bg: 'rgba(8, 145, 178, 0.25)' }    
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,11 +32,7 @@ async function cargarDatosReportes() {
             actualizarKPIs(data.kpis);
             if (data.graficas && data.graficas.length > 0) {
                 datosGlobalesGrafica = data.graficas;
-                
-                // 1. Construir barra de navegación/filtro por bovino
                 generarSelectorBovinos(datosGlobalesGrafica);
-
-                // 2. Cargar vista general consolidada
                 renderizarGraficaConsolidada(datosGlobalesGrafica);
             }
         }
@@ -57,9 +52,6 @@ function actualizarKPIs(kpis) {
     if (kpiProm) kpiProm.textContent = `${kpis.promedio_general} L`;
 }
 
-// ==========================================
-// 1. PANEL DE BOTONES INTERACTIVOS (UX)
-// ==========================================
 function generarSelectorBovinos(datos) {
     let contenedorSelector = document.getElementById('selectorBovinosContainer');
 
@@ -119,9 +111,6 @@ function marcarBotonActivo(botonSeleccionado, colorBorde = '#2563eb') {
     botonSeleccionado.style.border = `1px solid ${colorBorde}`;
 }
 
-// ==========================================
-// 2. VISTA GENERAL: BARRAS COMPARATIVAS LIMPIAS
-// ==========================================
 function renderizarGraficaConsolidada(datos) {
     const ctx = document.getElementById('chartProduccion');
     if (!ctx || !window.Chart) return;
@@ -185,9 +174,6 @@ function renderizarGraficaConsolidada(datos) {
     });
 }
 
-// ==========================================
-// 3. VISTA INDIVIDUAL: LÍNEA SUAVE CRONOLÓGICA
-// ==========================================
 function renderizarGraficaIndividual(nombreBovino, datos, color) {
     const ctx = document.getElementById('chartProduccion');
     if (!ctx || !window.Chart) return;

@@ -1,11 +1,7 @@
-// ==========================================
-// CONFIGURACIÓN DE LA API DE FLASK
-// ==========================================
+
 const API_URL = "http://127.0.0.1:5000/api";
 
-// ==========================================
-// 1. GESTIÓN DE VISTAS (LOGIN / REGISTRO)
-// ==========================================
+
 function mostrarRegistro() {
     const loginForm = document.getElementById("loginForm");
     const registerForm = document.getElementById("registerForm");
@@ -86,9 +82,7 @@ async function validarLogin() {
     }
 }
 
-// ==========================================
-// 2. PERFIL Y MENÚ DESPLEGABLE (DASHBOARD Y MENÚ)
-// ==========================================
+
 function toggleUserMenu(event) {
     if (event) event.stopPropagation();
     const dropdown = document.getElementById('user-dropdown-menu');
@@ -124,9 +118,7 @@ function cerrarSesion() {
     }
 }
 
-// ==========================================
-// 3. LÓGICA DE COLA FIFO Y PESAJE EN POTRERO
-// ==========================================
+
 let colaPesajes = JSON.parse(localStorage.getItem('cola_pesajes')) || [];
 
 function inicializarDashboard() {
@@ -245,9 +237,6 @@ async function sincronizarColaMySQL() {
     }
 }
 
-// ==========================================
-// 4. EXPORTAR USUARIOS A JSON
-// ==========================================
 function exportarUsuariosJSON() {
     let usuarios = {};
     for (let i = 0; i < localStorage.length; i++) {
@@ -266,9 +255,6 @@ function exportarUsuariosJSON() {
     downloadAnchorNode.remove();
 }
 
-// ==========================================
-// 5. INICIALIZADOR AUTOMÁTICO AL CARGAR PÁGINA
-// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     cargarPerfilUsuario();
     if (document.getElementById('ordenoForm')) {

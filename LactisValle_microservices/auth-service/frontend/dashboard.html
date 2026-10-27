@@ -14,28 +14,23 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: 12px;">
-        <!-- BOTÓN REGRESAR AL MENÚ PRINCIPAL -->
         <a href="menu.html" class="btn btn-primary" style="text-decoration: none; padding: 10px 22px; font-size: 0.9rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
             🏠 Menú Principal
         </a>
 
-        <!-- BADGE STATUS OFFLINE/ONLINE -->
         <div class="status-badge badge-online" id="networkStatus" style="padding: 10px 20px; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;">
             <span class="status-dot dot-online" id="networkDot"></span>
             <span id="networkText">Modo Offline Listo</span>
         </div>
-
-        <!-- BOTÓN CERRAR SESIÓN -->
-        <button type="button" class="btn-logout-custom" onclick="cerrarSesion()" style="padding: 10px 22px; white-space: nowrap;">
+    <button type="button" class="btn-logout-custom" onclick="cerrarSesion()" style="padding: 10px 22px; white-space: nowrap;">
             🔒 Cerrar Sesión
         </button>
     </div>
 </header>
 
-    <!-- CONTENEDOR PRINCIPAL -->
     <main class="main-container">
 
-        <!-- RESUMEN DE INDICADORES (KPIs) -->
+    
         <section class="kpi-grid">
             <div class="kpi-card">
                 <div class="kpi-title">REGISTROS EN COLA LOCAL</div>
@@ -51,7 +46,6 @@
             </div>
         </section>
 
-        <!-- FORMULARIO DE CAPTURA DE PESAJE EN POTRERO -->
         <section class="card">
             <h1 class="card-title">Captura de Pesaje en Potrero</h1>
             <p class="card-subtitle">Ingreso detallado de volumen, condición del bovino y evaluación sanitaria</p>
@@ -112,7 +106,6 @@
             <div id="statusAlert" class="alert-box"></div>
         </section>
 
-        <!-- TABLA FIFO LOCAL -->
         <section class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
                 <div>

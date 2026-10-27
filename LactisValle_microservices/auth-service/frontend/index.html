@@ -9,17 +9,11 @@
 <body style="background-color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: sans-serif;">
 
     <div class="login-card" style="background: #1e293b; padding: 30px; border-radius: 12px; width: 100%; max-width: 380px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-        
         <div style="font-size: 3rem; margin-bottom: 10px;">🐄</div>
         <h1 style="color: #38bdf8; margin: 0 0 5px 0; font-size: 1.8rem;">LactisValle</h1>
         <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 25px;">Sistema de Control Lechero - Valle de Ubaté</p>
-
         <h3 id="formTitle" style="margin-bottom: 20px; font-weight: 500;">Acceso al Sistema</h3>
-
-        <!-- CONTENEDOR DE NOTIFICACIONES -->
         <div id="loginAlert" style="display: none; padding: 10px; margin-bottom: 15px; border-radius: 6px; font-size: 0.85rem; text-align: center;"></div>
-
-        <!-- FORMULARIO DE ACCESO Y REGISTRO -->
         <form id="loginForm">
             <div style="margin-bottom: 15px; text-align: left;">
                 <input 
@@ -49,10 +43,7 @@
                 Ingresar
             </button>
         </form>
-
         <div style="margin: 20px 0; color: #64748b; font-size: 0.8rem;">ó</div>
-
-        <!-- BOTÓN REGISTRAR USUARIO -->
         <button 
             type="button" 
             id="btnRegisterToggle" 
@@ -62,7 +53,6 @@
             📑 Registrar Usuario
         </button>
 
-        <!-- BOTÓN DESCARGAR BASE DE DATOS JSON -->
         <button 
             type="button" 
             onclick="descargarBaseDatosJSON()" 
@@ -71,8 +61,6 @@
             📲 Descargar Base de Datos (JSON)
         </button>
     </div>
-
-    <!-- VINCULACIÓN CON EL ARCHIVO JAVASCRIPT EXTERNO -->
     <script src="inicio_S.js"></script>
 </body>
 </html>
